@@ -11,6 +11,6 @@ for i = 1:m
   for k = n:-1:1
     x(k:m) = x(k:m) - 2*V{k}*(V{k}'*x(k:m));
   end
-  Q(:,i) = x
+  Q(:,i) = x;
 end
 
