@@ -1,0 +1,77 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithmic}
+
+% \newcommand{\encode}[1] {{ {}_{\llcorner}{#1}_{\lrcorner}}}
+
+\title{Numerical Linear Algebra (CSE-6643) - Midterm take home exam}
+\author{Arash Rouhani (rarash@gatech.edu) - gtid: 902951864}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Part I}
+
+blah blah
+
+\section{Part II}
+
+\subsection{a}
+
+Here is an algorithm to generate a matrix $A$ with the given singular values
+$\Sigma$. Generate two random unitary matrixes $U$ and $V$ and let $A = U
+\Sigma V^*$. The way you generate the unitary matrices could be like this:
+
+Let $P=I$ be a projector which is gonna make sure of the orthogonality of the
+vectors we generate. For each $i=1 \to n$, we first randomly create size $n$
+row vector $a_i$. Now to ensure that it's orthogonal to all previous vectors,
+we multiply it by $P$. To ensure that future vectors will be orthogonal to the
+current vector we set $P$ to $P P_{\perp a_i}$. Also, after we have projected
+$a_i$ we also normalize it. Hence each vector we create is orthogonal to all
+previous ones and it's also of length 1 because it's normalized. Constructing
+a matrix consisting of these $n$ vectors will be unitary.
+
+In practice this algorithm is superflous, because this is exactly
+how the stable gram schmidt generates $Q$, only that the $a_i$ vectors isn't
+random but based on the input, so we create our unitary matrixes by feeding
+random data to stable gram schmidt and only looking at it's $Q$ output.
+
+\subsection{b}
+
+I found it interesting to look at these values in the two algorithms $QR$
+factorization.
+
+\begin{itemize}
+  \item Look at the norms of the produced $Q$s. Ideally they should be $1$.
+  \item Define two matrices $\Delta Q$ and $\Delta R$ to $Q_{classic} -
+    Q_{stable}$ and $R_{classic} - R_{stable}$ respectivly. Then plot both
+    their row and column medians.
+
+\end{itemize}
+
+Let's first look at the data for $n=100$ and then see if
+the pattern is partiuclarly different for $n=150$.
+
+% Now, loop through  $a_i$ $P:= $
+
+% \begin{algorithm}
+%   \FOR{$i = 1 \to 10$}
+%     blah
+%   \ENDFOR
+%   \caption{How go generate unitary matrix}
+% \end{algorithm}
+
+\end{document}
