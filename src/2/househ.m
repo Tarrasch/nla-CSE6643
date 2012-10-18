@@ -1,4 +1,4 @@
-function [ R, V ] = householder( A )
+function [ R, V ] = househ( A )
 %HOUSEHOLDER Summary of this function goes here
 %   Detailed explanation goes here
 

@@ -1,5 +1,5 @@
-function [ Q, R ] = gram_classic( A )
-%GRAM_CLASSIC The classical grammy schmidt factorization
+function [ Q, R ] = gram_classi( A )
+%GRAM_CLASSIC The classial grammy schmidt factorization
 % A naive QR factorization using successive orthogonalization. The result
 % of this function is Q and R such that A == Q*R
 
