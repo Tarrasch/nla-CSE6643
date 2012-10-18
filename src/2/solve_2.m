@@ -16,14 +16,14 @@ diff_Q = abs(Q_classic-Q_stable);
 diff_R = abs(R_classic-R_stable);
 
 % Now calculate the medians
-median_row_diff_Q = median(diff_Q, 1);
-median_columns_diff_Q = median(diff_Q, 2);
+median_rows_diff_Q = median(diff_Q, 1);
+median_cols_diff_Q = median(diff_Q, 2);
 
-save = @(fn) saveas(gcf, ['../../fig/' fn], 'pdf');
+save = @(fn) saveas(gcf, ['../../fig/' fn '-' num2str(n)], 'pdf');
 plot(median_columns_diff_Q)
 save('median_columns_diff_Q')
-plot(log(median_row_diff_Q))
+plot( log(median_row_diff_Q))
 save('log_median_row_diff_Q')
 
-median_row_diff_R_nonzeros = median(diff_R, 1); % TODO
-median_columns_diff_R_nonzeros= median(diff_R, 2); % TODO
+median_rows_diff_R_nonzeros = median(diff_R, 1); % TODO
+median_cols_diff_R_nonzeros = median(diff_R, 2); % TODO

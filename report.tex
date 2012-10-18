@@ -2,7 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage{hyperref}
+% \usepackage{hyperref} % fucking warnings
 \usepackage{graphicx}
 \usepackage{rotating}
 \usepackage{listings}
@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{algorithmic}
+\usepackage{datatool}
 
 % \newcommand{\encode}[1] {{ {}_{\llcorner}{#1}_{\lrcorner}}}
 
@@ -64,6 +65,32 @@ factorization.
 
 Let's first look at the data for $n=100$ and then see if
 the pattern is partiuclarly different for $n=150$.
+
+\subsubsection{$n=100$}
+
+\begin{tabular}{r|c|c|c|}
+  \multicolumn{1}{r}{}
+   & \multicolumn{1}{c}{$Q_{classic}$ }
+   & \multicolumn{1}{c}{$Q_{stable}$}  \\
+   & \multicolumn{1}{c}{$Q_{householder}$} \\
+  \cline{2-4}
+  $n=100$ & \input{data/norm-q-classi-100.dat}
+          & \input{data/norm-q-stable-100.dat}
+          & \input{data/norm-q-househ-100.dat}
+          \\ \cline{2-4}
+  % $n=150$ & \input{data/norm-q-classy-150.dat}
+  %         & \input{data/norm-q-stable-150.dat}
+  %         & \input{data/norm-q-househ-150.dat}
+  %         \\ \cline{2-4}
+\end{tabular}
+
+
+% The 2-norm for is and
+% \input{data/norm-q-stable.dat} for .
+
+% The plots 
+
+\subsubsection{$n=150$}
 
 % Now, loop through  $a_i$ $P:= $
 
