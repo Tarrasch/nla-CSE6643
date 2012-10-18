@@ -53,7 +53,27 @@ how the stable gram schmidt generates $Q$, only that the $a_i$ vectors isn't
 random but based on the input, so we create our unitary matrixes by feeding
 random data to stable gram schmidt and only looking at it's $Q$ output.
 
-\subsection{b}
+\subsection{b and c}
+
+My implementations for gram schmidt are direct translations from the
+pseduocode presented in the text book. So they are not so interesting to
+look at and instead I decided to only look at the results of the
+produced Q and R.
+
+As for the householder transform, again I decided to translate the
+pseudocode from the text book. However that only gives me $R$, to
+produce $Q$ I use algorithm 10.3 from the book, which is
+\emph{Implicit calculation of a Product $Qx$} where I set x = $I_i$ for
+all $i = 1 \to n$. The book this recommended to explicitly construct
+$Q$, which is why I did it.
+
+The rest of this chapter will consist of \emph{Observations} and
+\emph{Analysis}. The former is some values I extracted from the $Q$ and
+$R$ for the three different methods. Indeed, some observed values will
+me notable and form interesting patterns meanwhile other values will
+seem arbitrary. My analysis tries to explain all of that.
+
+\subsubsection{Observations}
 
 I found it interesting to look at these values in the two algorithms $QR$
 factorization.
@@ -69,7 +89,6 @@ factorization.
 Let's first look at the data for $n=100$ and then see if
 the pattern is partiuclarly different for $n=150$.
 
-\subsubsection{$n=100$}
 \begin{table}[h]
   \begin{tabular}{r|c|c|c|}
     \multicolumn{1}{r}{}
@@ -130,33 +149,7 @@ the pattern is partiuclarly different for $n=150$.
 \genfig{log-median-col}{R}{logarithmized}
 \genfig{log-median-row}{R}{logarithmized}
 
-% \begin{figure}
-%         \centering
-%         \begin{subfigure}[b]{1.0\textwidth}
-%                 \includegraphics[width=\textwidth]{fig/log-median-col-Q-100}
-%                 \caption{$n = 100$}
-%         \end{subfigure}
-%         \begin{subfigure}[b]{1.0\textwidth}
-%                 \includegraphics[width=\textwidth]{fig/log-median-col-Q-150}
-%                 \caption{$n = 150$}
-%         \end{subfigure}
-%         \caption{Medians of the columns of $\Delta Q$ logarithmized}\label{fig:med-q-col}
-% \end{figure}
+\subsubsection{Analysis}
 
-% The 2-norm for is and
-% \input{data/norm-q-stable.dat} for .
-
-% The plots 
-
-\subsubsection{$n=150$}
-
-% Now, loop through  $a_i$ $P:= $
-
-% \begin{algorithm}
-%   \FOR{$i = 1 \to 10$}
-%     blah
-%   \ENDFOR
-%   \caption{How go generate unitary matrix}
-% \end{algorithm}
 
 \end{document}
