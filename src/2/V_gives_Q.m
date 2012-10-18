@@ -13,4 +13,3 @@ for i = 1:m
   end
   Q(:,i) = x;
 end
-

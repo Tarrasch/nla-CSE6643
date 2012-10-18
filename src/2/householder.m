@@ -12,4 +12,4 @@ for k = 1:n
   A(k:m, k:n) = A(k:m, k:n) - 2*V{k}*(V{k}'*A(k:m, k:n));
 end
 
-R = A
+R = A;
