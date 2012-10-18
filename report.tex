@@ -4,6 +4,7 @@
 \usepackage{lmodern}
 % \usepackage{hyperref} % fucking warnings
 \usepackage{graphicx}
+\usepackage{graphics}
 \usepackage{rotating}
 \usepackage{listings}
 \usepackage{color}
@@ -14,6 +15,7 @@
 \usepackage{algorithmic}
 \usepackage{datatool}
 \usepackage{caption}
+\usepackage{subcaption}
 
 % \newcommand{\encode}[1] {{ {}_{\llcorner}{#1}_{\lrcorner}}}
 
@@ -108,25 +110,37 @@ the pattern is partiuclarly different for $n=150$.
   \label{tab:stds}
 \end{table}
 
+\newcommand{\genfig}[3] {{
+    \begin{figure}
+            \centering
+            \begin{subfigure}[b]{1.0\textwidth}
+                    \includegraphics[width=\textwidth]{fig/#1-#2-100}
+                    \caption{$n = 100$}
+            \end{subfigure}
+            \begin{subfigure}[b]{1.0\textwidth}
+                    \includegraphics[width=\textwidth]{fig/#1-#2-150}
+                    \caption{$n = 150$}
+            \end{subfigure}
+            \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1}
+    \end{figure}
+  }}
+
+\genfig{log-median-col}{Q}{logarithmized}
+\genfig{median-row}{Q}{}
+\genfig{log-median-col}{R}{logarithmized}
+\genfig{log-median-row}{R}{logarithmized}
+
 % \begin{figure}
 %         \centering
-%         \begin{subfigure}[b]{0.3\textwidth}
-%                 \centering
-%                 \includegraphics[width=\textwidth]{}
-%                 \caption{A gull}
-%                 \label{fig:gull}
-%         \end{subfigure}%
-%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
-%           %(or a blank line to force the subfigure onto a new line)
-%         \begin{subfigure}[b]{0.3\textwidth}
-%                 \centering
-%                 \includegraphics[width=\textwidth]{tiger}
-%                 \caption{A tiger}
-%                 \label{fig:tiger}
+%         \begin{subfigure}[b]{1.0\textwidth}
+%                 \includegraphics[width=\textwidth]{fig/log-median-col-Q-100}
+%                 \caption{$n = 100$}
 %         \end{subfigure}
-%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
-%           %(or a blank line to force the subfigure onto a new line)
-%         \caption{Pictures of animals}\label{fig:animals}
+%         \begin{subfigure}[b]{1.0\textwidth}
+%                 \includegraphics[width=\textwidth]{fig/log-median-col-Q-150}
+%                 \caption{$n = 150$}
+%         \end{subfigure}
+%         \caption{Medians of the columns of $\Delta Q$ logarithmized}\label{fig:med-q-col}
 % \end{figure}
 
 % The 2-norm for is and
