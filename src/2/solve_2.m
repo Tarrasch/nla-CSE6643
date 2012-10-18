@@ -1,7 +1,7 @@
 sigmas = arrayfun(@(x) 2^-x,1:n);
 rng(0); % So program becomes deterministic
 A = rand_sing(sigmas);
-qr_methods = {'classi', 'stable', 'househ'}
+qr_methods = {'classi', 'stable', 'househ'};
 
 [Q_classi, R_classi] = gram_classi(A);
 [Q_stable, R_stable] = gram_stable(A);
@@ -15,13 +15,13 @@ for m = qr_methods
   m=m{1};
 
   % First do the norm
-  eval(['norm_Q_' m ' = ' 'norm(Q_' m ')']);
+  eval(['norm_Q_' m ' = ' 'norm(Q_' m ');']);
   path = ['../../data/' 'norm-q-' m '-' num2str(n) '.dat'];
   norm_var = ['norm_Q_' m];
   system(['echo ' num2str(eval(norm_var)) ' > ' path]);
 
   % Then the A comparisions
-  eval(['std_Q_' m ' = ' 'std(std(A - Q_' m '*R_' m '))']);
+  eval(['std_Q_' m ' = ' 'std(std(A - Q_' m '*R_' m '));']);
   path = ['../../data/' 'std-q-' m '-' num2str(n) '.dat'];
   std_var = ['std_Q_' m];
   system(['echo ' num2str(eval(std_var)) ' > ' path]);
