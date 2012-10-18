@@ -13,6 +13,7 @@
 \usepackage{amssymb}
 \usepackage{algorithmic}
 \usepackage{datatool}
+\usepackage{caption}
 
 % \newcommand{\encode}[1] {{ {}_{\llcorner}{#1}_{\lrcorner}}}
 
@@ -67,23 +68,66 @@ Let's first look at the data for $n=100$ and then see if
 the pattern is partiuclarly different for $n=150$.
 
 \subsubsection{$n=100$}
+\begin{table}[h]
+  \begin{tabular}{r|c|c|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{$Q_{classic}$ }
+     & \multicolumn{1}{c}{$Q_{stable}$}
+     & \multicolumn{1}{c}{$Q_{householder}$} \\
+    \cline{2-4}
+    $n=100$ & \input{data/norm-q-classi-100.dat}
+            & \input{data/norm-q-stable-100.dat}
+            & \input{data/norm-q-househ-100.dat}
+            \\ \cline{2-4}
+    $n=150$ & \input{data/norm-q-classi-150.dat}
+            & \input{data/norm-q-stable-150.dat}
+            & \input{data/norm-q-househ-150.dat}
+            \\ \cline{2-4}
+  \end{tabular}
+  \caption{Norms for the different unitary $Q$ matrices}
+  \label{tab:norms}
+\end{table}
 
-\begin{tabular}{r|c|c|c|}
-  \multicolumn{1}{r}{}
-   & \multicolumn{1}{c}{$Q_{classic}$ }
-   & \multicolumn{1}{c}{$Q_{stable}$}
-   & \multicolumn{1}{c}{$Q_{householder}$} \\
-  \cline{2-4}
-  $n=100$ & \input{data/norm-q-classi-100.dat}
-          & \input{data/norm-q-stable-100.dat}
-          & \input{data/norm-q-househ-100.dat}
-          \\ \cline{2-4}
-  $n=150$ & \input{data/norm-q-classi-150.dat}
-          & \input{data/norm-q-stable-150.dat}
-          & \input{data/norm-q-househ-150.dat}
-          \\ \cline{2-4}
-\end{tabular}
+\begin{table}[h]
+  \begin{tabular}{r|c|c|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{$Q_{classic}$ }
+     & \multicolumn{1}{c}{$Q_{stable}$}
+     & \multicolumn{1}{c}{$Q_{householder}$} \\
+    \cline{2-4}
+    $n=100$ & \input{data/std-q-classi-100.dat}
+            & \input{data/std-q-stable-100.dat}
+            & \input{data/std-q-househ-100.dat}
+            \\ \cline{2-4}
+    $n=150$ & \input{data/std-q-classi-150.dat}
+            & \input{data/std-q-stable-150.dat}
+            & \input{data/std-q-househ-150.dat}
+            \\ \cline{2-4}
+  \end{tabular}
+  \caption{The standard deviation for the values of $A-QR$}
+  \label{tab:stds}
+\end{table}
 
+% \begin{figure}
+%         \centering
+%         \begin{subfigure}[b]{0.3\textwidth}
+%                 \centering
+%                 \includegraphics[width=\textwidth]{}
+%                 \caption{A gull}
+%                 \label{fig:gull}
+%         \end{subfigure}%
+%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+%           %(or a blank line to force the subfigure onto a new line)
+%         \begin{subfigure}[b]{0.3\textwidth}
+%                 \centering
+%                 \includegraphics[width=\textwidth]{tiger}
+%                 \caption{A tiger}
+%                 \label{fig:tiger}
+%         \end{subfigure}
+%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+%           %(or a blank line to force the subfigure onto a new line)
+%         \caption{Pictures of animals}\label{fig:animals}
+% \end{figure}
 
 % The 2-norm for is and
 % \input{data/norm-q-stable.dat} for .

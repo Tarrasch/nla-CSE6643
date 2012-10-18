@@ -9,12 +9,22 @@ qr_methods = {'classi', 'stable', 'househ'}
 [R_househ, V_househ] = househ(A);
 Q_househ = V_gives_Q(V_househ);
 
+save = @(fn) saveas(gcf, ['../../fig/' fn '-' num2str(n)], 'pdf');
+
 for m = qr_methods
   m=m{1}
+
+  % First do the norm
   eval(['norm_Q_' m ' = ' 'norm(Q_' m ')'])
   path = ['../../data/' 'norm-q-' m '-' num2str(n) '.dat']
   norm_var = ['norm_Q_' m]
   system(['echo ' num2str(eval(norm_var)) ' > ' path])
+
+  % Then the A comparisions
+  eval(['std_Q_' m ' = ' 'std(std(A - Q_' m '*R_' m '))'])
+  path = ['../../data/' 'std-q-' m '-' num2str(n) '.dat']
+  std_var = ['std_Q_' m]
+  system(['echo ' num2str(eval(std_var)) ' > ' path])
 end
 norm_Q_classi = norm(Q_classi, 2)
 norm_Q_stable = norm(Q_stable, 2)
@@ -27,7 +37,6 @@ diff_R = abs(R_classi-R_stable);
 median_row_diff_Q = median(diff_Q, 1);
 median_col_diff_Q = median(diff_Q, 2);
 
-save = @(fn) saveas(gcf, ['../../fig/' fn '-' num2str(n)], 'pdf');
 plot(     median_col_diff_Q)
 save(    'median_col_diff_Q')
 plot( log(median_row_diff_Q))
@@ -35,3 +44,4 @@ save('log_median_row_diff_Q')
 
 median_rows_diff_R_nonzeros = median(diff_R, 1); % TODO
 median_cols_diff_R_nonzeros = median(diff_R, 2); % TODO
+
