@@ -9,5 +9,5 @@ b = arrayfun(@(i) (1/2-(i)*h)*h2, 1:n)';
 u = A\b;
 % u = solve_system(A, b);
 
-% p = plot(0:h:1, [0 u' 0]);
-% set(p,'Color', [0 (log2(m)-5.64)/6.2 0])
+ p = plot(0:h:1, [0 u' 0]);
+ set(p,'Color', [0 (log2(m)-5.64)/6.2 0])

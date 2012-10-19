@@ -57,72 +57,85 @@ $u[i]$ in this scheme.
 \subsection{Solving a linear equation}
 
 My implementation of gauss elimination is a direct source code
-translation from the pseudocode from the book. I did not implement the
+translation from the pseudo code from the book. I did not implement the
 optimizations like not explicitly creating $P$ or let $A$ be overwritten
-by $U$ or $L$. The $Ax=b$ is then turned tracted as $LUx=Pb=b'$, very much
-like the discussion in the book (p. 152). As the book hints, I just
-use a forward and backward elimination to solve the triangular
-systems. I wrote both a forward and backward elimination but they too
-trivial to be worth presenting.
+by $U$ or $L$. The $Ax=b$ is rewritten as $LUx=Pb=b'$, very much like
+the discussion in the book (p. 152). As the book hints, I just use a
+forward and backward elimination to solve the triangular systems. I
+wrote both a forward and backward elimination, but they are not
+attached.
 
 \subsection{Results and analysis}
 
-I did run it for the $n$ mentioned on the exam. I used matlabs tic toc
-routines to time everything. Here are the results
+I did run it for the $n$s mentioned on the exam. I used matlabs
+\texttt{tic toc} routines to time everything. Here are the results
 
 \begin{lstlisting}
-Elapsed time is 0.060627 seconds.
-Elapsed time is 0.238094 seconds.
-Elapsed time is 1.072788 seconds.
-Elapsed time is 5.368879 seconds.
-Elapsed time is 30.166895 seconds.
-Elapsed time is 194.438070 seconds.
-Elapsed time is 1328.453620 seconds.
+Elapsed time is 0.060627 seconds.    ( n = 50   )
+Elapsed time is 0.238094 seconds.    ( n = 100  )
+Elapsed time is 1.072788 seconds.    ( n = 200  )
+Elapsed time is 5.368879 seconds.    ( n = 400  )
+Elapsed time is 30.166895 seconds.   ( n = 800  )
+Elapsed time is 194.438070 seconds.  ( n = 1600 )
+Elapsed time is 1328.453620 seconds. ( n = 3200 )
 \end{lstlisting}
 
-We observe a increase in running time by a factor of $6$ to $7$. I would
-have guessed around $8$ because the $O(m^3)$ complexity should get
-multiplied 8 when m doubles.
+We observe an increase in execution time by a factor between $6$ and
+$7$. I would have guessed around $8$ because the $O(m^3)$ complexity
+gets multiplied by $8$ when $m$ doubles.
 
 \begin{figure}
-        \centering
         \begin{subfigure}[b]{1.0\textwidth}
-                \includegraphics[width=\textwidth]{fig/#1-#2-100}
-                \caption{$n = 100$}
+          \includegraphics[width=\textwidth]{fig/all.png}
+          \caption{The whole plot}\label{fig:wholeplot}
         \end{subfigure}
+
         \begin{subfigure}[b]{1.0\textwidth}
-                \includegraphics[width=\textwidth]{fig/#1-#2-150}
-                \caption{$n = 150$}
+          \includegraphics[width=\textwidth]{fig/azoom.png}
+          \caption{One zooming}\label{fig:zooming}
         \end{subfigure}
-        \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
+        \caption{Plots of $u(x)$. The red line is the actual function.
+        The others are estimations. The greener the line the higher
+      $n$.}\label{fig:plots}
 \end{figure}
 
+I've included two plots, one which isn't zoomed and one which is highly
+zoomed. The "actual function" in red is a symbolically expressed
+function, the solution to the differential equation I solved by hand.
+
+What I find surprising in the zoomed figure is that with a higher $n$
+the green lines clearly are converging, but not towards the correct (red)
+line.  This behavior persists even if I use matlab's "backslash" instead
+of my Gaussian elimination. The difference is also much higher than the
+machine epsilon, so it's not a stability issue. I'm not sure how
+\texttt{fplot} works (which I plotted the red line with), but I believe
+it might use a forward or backward difference scheme rather than the
+centered difference scheme, that might explain why the estimation
+doesn't converge to the actual value but to a value near it.
 
 \subsubsection{Some extra experiments}
 
-I also tried using matlabs in built
-\texttt{A\\b}. It's not until $n>100000$ that matlab surpasses a second
-of execution time! Obviously matlab can use the fact that the matrix is
-tridiagonal. Hence, matlab confirms that using gauss is very naive for
-this particular problem since it'll not use the fact that $A$ is
-tridiagonal.
+I also tried using matlabs in built \texttt{A\textbackslash b}. It's not until
+$n>100000$ that matlab surpasses a second of execution time! Obviously
+matlab can use the fact that the matrix is tridiagonal. Hence, matlab
+confirms that using Gaussian elimination is very naive for this
+particular problem since it'll not use the fact that $A$ is tridiagonal.
 
-Another experiment I did was to profile my code, and as I expected most
-($>80\%$) of the execution time was spent on the line corresponding to
-the last line of the gauss pseudo code in Algorithm 21.1 in the book.
-Why? Because it's what makes the algorithm $O(m^3)$ rather than
-$O(m^2)$.
+Another experiment I did was to profile my code, most of the execution
+$>80\%$) time was spent on the line corresponding to the last line of
+the gauss pseudo code from Algorithm 21.1 in the book.  Why? Because
+it's the line making the algorithm $O(m^3)$ rather than $O(m^2)$.
 
 \section{Part II}
 
 \subsection{a}
 
 Here is an algorithm to generate a matrix $A$ with the given singular values
-$\Sigma$. Generate two random unitary matrixes $U$ and $V$ and let $A = U
+$\Sigma$. Generate two random unitary matrices $U$ and $V$ and let $A = U
 \Sigma V^*$. The way you generate the unitary matrices could be like this:
 
 Let $P=I$ be a projector which is gonna make sure of the orthogonality of the
-vectors we generate. For each $i=1 \to n$, we first randomly create size $n$
+vectors we generate. For each $i=1 \dots n$, we first randomly create size $n$
 row vector $a_i$. Now to ensure that it's orthogonal to all previous vectors,
 we multiply it by $P$. To ensure that future vectors will be orthogonal to the
 current vector we set $P$ to $P P_{\perp a_i}$. Also, after we have projected
@@ -130,22 +143,22 @@ $a_i$ we also normalize it. Hence each vector we create is orthogonal to all
 previous ones and it's also of length 1 because it's normalized. Constructing
 a matrix consisting of these $n$ vectors will be unitary.
 
-In practice this algorithm is superflous, because this is exactly
-how the stable gram schmidt generates $Q$, only that the $a_i$ vectors isn't
-random but based on the input, so we create our unitary matrixes by feeding
-random data to stable gram schmidt and only looking at it's $Q$ output.
+In practice this algorithm is superfluous, because this is exactly
+how the stable Gram Schmidt generates $Q$, only that the $a_i$ vectors isn't
+random but based on the input, so we create our unitary matrices by feeding
+random data to stable Gram Schmidt and only looking at it's $Q$ output.
 
 \subsection{b and c}
 
-My gram schmidt implementations are direct translations from the
-pseduocode presented in the text book. So they are not interesting,
+My Gram Schmidt implementations are direct translations from the
+pseudo code presented in the text book. So they are not interesting,
 instead I decided to look at the results of the produced $Q$s and $R$s.
 
 As for the householder transform, again I decided to translate the
-pseudocode from the text book. However that only gives me $R$, to
+pseudo code from the text book. However that only gives me $R$, to
 produce $Q$ I use algorithm 10.3 from the book, which is
 \emph{Implicit calculation of a Product $Qx$} where I set x = $I_i$ for
-all $i = 1 \to n$. The book recommend this way to explicitly construct
+all $i = 1 \dots n$. The book recommend this way to explicitly construct
 $Q$, which is why I choose this way.
 
 The rest of this chapter will consist of \emph{Observations} and
@@ -163,21 +176,21 @@ I extract these values from the algorithms' $QR$ factorizations.
   \item The standard deviation for the values of $A-QR$. Ideally the
     standard deviations are $0$.
   \item Define two matrices $\Delta Q$ and $\Delta R$ to $Q_{classic} -
-    Q_{stable}$ and $R_{classic} - R_{stable}$ respectivly. Then plot both
-    their row and column medians. For the medians of the uppper
+    Q_{stable}$ and $R_{classic} - R_{stable}$ respectively. Then plot both
+    their row and column medians. For the medians of the upper
     triangular matrix $R$, I ignore the non upper values when
     calculating the median since they are always zero.
 
 \end{itemize}
 
 I choose to look at the norms and the standard deviations because they
-are very familiar metrics easy to extract. As for the four diffrent
+are very familiar metrics easy to extract. As for the four different
 medians, they might reveal patterns in how the entries will
 become more and more subjected to instability as the algorithm
 progresses, either column wise or row wise.
 
 Let's first look at the data for $n=100$ and then see if
-the pattern is partiuclarly different for $n=150$.
+the pattern is particularly different for $n=150$.
 
 \begin{table}[h]
   \begin{tabular}{r|c|c|c|}
@@ -250,11 +263,11 @@ we use are at worst only instable and the small singular values (part of
 input) will only provoke errors of the size of the machine error. The
 algorithms are however not incorrect. They successfully compute a $QR$
 factorization.  Put simply, the standard deviation would have only been
-big if the algorithm itselfs were completely incorrect, the ones we use
+big if the algorithm itself were completely incorrect, the ones we use
 are only unstable and thus we only get a very small error.
 
 \textbf{There is no pattern in figure \ref{fig:median-row-Q}}. Well, Both
-gram schmidt algorithms are iteratively constructing $Q$ in the sense
+Gram Schmidt algorithms are iteratively constructing $Q$ in the sense
 that it's built column vector by column vector. So when looking at a row,
 it will consist values from the columns created at all the different
 steps of the iteration. So the diffused set of values will not yield any
