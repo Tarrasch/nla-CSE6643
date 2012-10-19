@@ -55,36 +55,44 @@ random data to stable gram schmidt and only looking at it's $Q$ output.
 
 \subsection{b and c}
 
-My implementations for gram schmidt are direct translations from the
-pseduocode presented in the text book. So they are not so interesting to
-look at and instead I decided to only look at the results of the
-produced Q and R.
+My gram schmidt implementations are direct translations from the
+pseduocode presented in the text book. So they are not interesting,
+instead I decided to look at the results of the produced $Q$s and $R$s.
 
 As for the householder transform, again I decided to translate the
 pseudocode from the text book. However that only gives me $R$, to
 produce $Q$ I use algorithm 10.3 from the book, which is
 \emph{Implicit calculation of a Product $Qx$} where I set x = $I_i$ for
-all $i = 1 \to n$. The book this recommended to explicitly construct
-$Q$, which is why I did it.
+all $i = 1 \to n$. The book recommend this way to explicitly construct
+$Q$, which is why I choose this way.
 
 The rest of this chapter will consist of \emph{Observations} and
-\emph{Analysis}. The former is some values I extracted from the $Q$ and
-$R$ for the three different methods. Indeed, some observed values will
-me notable and form interesting patterns meanwhile other values will
-seem arbitrary. My analysis tries to explain all of that.
+\emph{Analysis}. The former will present various values I extracted from
+$Q$ and $R$ for the three different factorizations. Indeed, some
+observed values are notable and form interesting patterns meanwhile
+others seem arbitrary. My analysis will explain why that's so.
 
 \subsubsection{Observations}
 
-I found it interesting to look at these values in the two algorithms $QR$
-factorization.
+I extract these values from the algorithms' $QR$ factorizations.
 
 \begin{itemize}
   \item Look at the norms of the produced $Q$s. Ideally they should be $1$.
+  \item The standard deviation for the values of $A-QR$. Ideally the
+    standard deviations are $0$.
   \item Define two matrices $\Delta Q$ and $\Delta R$ to $Q_{classic} -
     Q_{stable}$ and $R_{classic} - R_{stable}$ respectivly. Then plot both
-    their row and column medians.
+    their row and column medians. For the medians of the uppper
+    triangular matrix $R$, I ignore the non upper values when
+    calculating the median since they are always zero.
 
 \end{itemize}
+
+I choose to look at the norms and the standard deviations because they
+are very familiar metrics easy to extract. As for the four diffrent
+medians, they might reveal patterns in how the entries will
+become more and more subjected to instability as the algorithm
+progresses, either column wise or row wise.
 
 Let's first look at the data for $n=100$ and then see if
 the pattern is partiuclarly different for $n=150$.
@@ -140,7 +148,7 @@ the pattern is partiuclarly different for $n=150$.
                     \includegraphics[width=\textwidth]{fig/#1-#2-150}
                     \caption{$n = 150$}
             \end{subfigure}
-            \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1}
+            \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
     \end{figure}
   }}
 
@@ -150,6 +158,42 @@ the pattern is partiuclarly different for $n=150$.
 \genfig{log-median-row}{R}{logarithmized}
 
 \subsubsection{Analysis}
+
+There are clearly many interesting patterns here, but lets save the best
+for the last.
+
+\textbf{Table \ref{tab:stds} has no outlier}. The standard deviations
+are all very small and about the same size. Why? Because the algorithms
+we use are at worst only instable and the small singular values (part of
+input) will only provoke errors of the size of the machine error. The
+algorithms are however not incorrect. They successfully compute a $QR$
+factorization.  Put simply, the standard deviation would have only been
+big if the algorithm itselfs were completely incorrect, the ones we use
+are only unstable and thus we only get a very small error.
+
+\textbf{There is no pattern in figure \ref{fig:median-row-Q}}. Well, Both
+gram schmidt algorithms are iteratively constructing $Q$ in the sense
+that it's built column vector by column vector. So when looking at a row,
+it will consist values from the columns created at all the different
+steps of the iteration. So the diffused set of values will not yield any
+pattern when scanning along the rows.
+
+\textbf{Table \ref{tab:norms}}. It's clear what happens with the norm
+for $Q_{stable}$ and $Q_{householder}$. The former converges to $\sqrt{2}$
+and the latter stays at exactly $1$. For the classic algorithm it
+doesn't seem to diverge but it's still increasing significantly when
+increasing $n$ from $100$ to $150$.
+
+\textbf{Figure \ref{fig:log-median-col-Q}, \ref{fig:log-median-col-R},
+\ref{fig:log-median-row-R} are linear then flattens}. The
+"column median figures" (\ref{fig:log-median-col-Q} and
+\ref{fig:log-median-col-R}) clearly flattens at around $i=25$
+independent of $n$. Similarly in figure \ref{fig:log-median-row-R}, the
+median of the rows of $R$, a flattening is happening at $i=50$. Of
+course there is no purely mathematical significance with the number $50$
+nor $25$, so I suspected that my machine's simplification of the real
+numbers, the floats, was the culprit. Indeed matlab reported that
+the machine epsilon is $2^{-52}$ when typing \texttt{help eps}.
 
 
 \end{document}
