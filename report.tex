@@ -29,7 +29,89 @@
 
 \section{Part I}
 
-blah blah
+This task consists of (1) discretizing a differential equation into
+linear equation, (2) solving the linear equation using own
+written gauss elimination and (3) plotting,  timing and commenting on
+results.
+
+\subsection{Discretization}
+
+For $n$ interior points we have $m=n+1$ interior slices. We define $h$
+to $1/m$ which is the distance between the points. With this a natural
+discretization appears
+
+\[
+  u''[i] = \frac{1}{2} - \frac{i}{m} = \frac{u[i+1]-2u[i]+u[i-1]}{h^2}
+\]
+
+Where $u$ is unknown, of course, we want to solve for it since it's a
+differential equation. More precisely, $u[0]=u[m]=0$ are corresponding
+to the given initial values and $u[i]$ exists for $i = 1..n$.
+
+Now we want to form the typical equation $Ax=b$ such that solving for
+$x$ gives all $u[i]$. The equation above gives us this scheme: Let $A$
+be a tridiagonal matrix with only $-2$ in the diagonal and $1$ in its
+sub- and super diagonal. Set $b_i$ to $(1/2-i*h)h^2$. $x_i$ is simply
+$u[i]$ in this scheme.
+
+\subsection{Solving a linear equation}
+
+My implementation of gauss elimination is a direct source code
+translation from the pseudocode from the book. I did not implement the
+optimizations like not explicitly creating $P$ or let $A$ be overwritten
+by $U$ or $L$. The $Ax=b$ is then turned tracted as $LUx=Pb=b'$, very much
+like the discussion in the book (p. 152). As the book hints, I just
+use a forward and backward elimination to solve the triangular
+systems. I wrote both a forward and backward elimination but they too
+trivial to be worth presenting.
+
+\subsection{Results and analysis}
+
+I did run it for the $n$ mentioned on the exam. I used matlabs tic toc
+routines to time everything. Here are the results
+
+\begin{lstlisting}
+Elapsed time is 0.060627 seconds.
+Elapsed time is 0.238094 seconds.
+Elapsed time is 1.072788 seconds.
+Elapsed time is 5.368879 seconds.
+Elapsed time is 30.166895 seconds.
+Elapsed time is 194.438070 seconds.
+Elapsed time is 1328.453620 seconds.
+\end{lstlisting}
+
+We observe a increase in running time by a factor of $6$ to $7$. I would
+have guessed around $8$ because the $O(m^3)$ complexity should get
+multiplied 8 when m doubles.
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{1.0\textwidth}
+                \includegraphics[width=\textwidth]{fig/#1-#2-100}
+                \caption{$n = 100$}
+        \end{subfigure}
+        \begin{subfigure}[b]{1.0\textwidth}
+                \includegraphics[width=\textwidth]{fig/#1-#2-150}
+                \caption{$n = 150$}
+        \end{subfigure}
+        \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
+\end{figure}
+
+
+\subsubsection{Some extra experiments}
+
+I also tried using matlabs in built
+\texttt{A\\b}. It's not until $n>100000$ that matlab surpasses a second
+of execution time! Obviously matlab can use the fact that the matrix is
+tridiagonal. Hence, matlab confirms that using gauss is very naive for
+this particular problem since it'll not use the fact that $A$ is
+tridiagonal.
+
+Another experiment I did was to profile my code, and as I expected most
+($>80\%$) of the execution time was spent on the line corresponding to
+the last line of the gauss pseudo code in Algorithm 21.1 in the book.
+Why? Because it's what makes the algorithm $O(m^3)$ rather than
+$O(m^2)$.
 
 \section{Part II}
 
