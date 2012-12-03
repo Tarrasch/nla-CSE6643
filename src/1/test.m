@@ -12,8 +12,10 @@ ml_eigs = sort(eig(A));
 ml_small_large = ml_eigs([1 end]);
 
 ml_small_large
-extreme_eigs(A, b)
-ml_small_large - extreme_eigs(A, b)
+% my_alg = extreme_eigs(A, b);
+% diff = ml_small_large - my_alg
+my_rq_alg = rq_extreme_eigs(A, b);
+diff_rq = ml_small_large - my_rq_alg
 
 end
 
