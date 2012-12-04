@@ -9,14 +9,15 @@ a = @(x) diag(sparse(x)); % sparse diag
 a_prime = @(x) sparse(1:length(x), 1:length(x), 1); % sparse eye
 
 on = ones(1, n-1);
-h0_part = sparse(1:n, 1:n, lambda)
-h1_part = a_prime(x)*gallery('tridiag', -on, zeros(n,1), on)/(2*h)
-h2_part = a(x)*gallery('tridiag', on, -2*[on 1], on)/h2
+h0_part = sparse(1:n, 1:n, lambda);
+h1_part = a_prime(x)*gallery('tridiag', -on, zeros(n,1), on)/(2*h);
+h2_part = a(x)*gallery('tridiag', on, -2*[on 1], on)/h2;
 S = h0_part - h1_part - h2_part;
-if !is_posdef(S)
+if ~is_posdef(S)
   display ' (!) The matrix is not positive definite, CG wont work!'
 end
-A = full(S)
-
-
+A = full(S);
 b = arrayfun(@(i) (1/2-(i)*h)*h2, 1:n)';
+
+x_sd = steepest_descent(A, b)
+x_cg = conjugate_gradient(A, b)
