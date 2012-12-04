@@ -10,5 +10,3 @@ output_args = [highest, smallest]';
 
 
 end
-
-
