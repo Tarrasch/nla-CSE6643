@@ -15,6 +15,8 @@ h2_part = a(x)*gallery('tridiag', on, -2*[on 1], on)/h2;
 S = h0_part - h1_part - h2_part;
 if ~is_posdef(S)
   display ' (!) The matrix is not positive definite, CG wont work!'
+else
+  display ' Hooray, matrix is posdef'
 end
 A = full(S);
 b = arrayfun(@(i) (1/2-(i)*h)*h2, 1:n)';
