@@ -18,8 +18,19 @@ if ~is_posdef(S)
 else
   display ' Hooray, matrix is posdef'
 end
-A = full(S);
-b = arrayfun(@(i) (1/2-(i)*h)*h2, 1:n)';
+% A = full(S);
+b = (-0.5+h:h:0.5-h)';
 
-x_sd = steepest_descent(A, b)
-x_cg = conjugate_gradient(A, b)
+tic
+x_sd = steepest_descent(S, b);
+toc
+tic
+x_cg = conjugate_gradient(S, b);
+toc
+
+% Plotting
+myplot = @(values) plot(0:h:1, [0; values; 0]);
+hold on
+myplot(x_sd)
+myplot(x_cg)
+hold off
