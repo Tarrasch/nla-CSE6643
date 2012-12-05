@@ -54,6 +54,53 @@ be a tridiagonal matrix with only $-2$ in the diagonal and $1$ in its
 sub- and super diagonal. Set $b_i$ to $(1/2-i*h)h^2$. $x_i$ is simply
 $u[i]$ in this scheme.
 
+\section{Part II}
+
+\subsection{Discretization}
+
+We note that $b$ and $x$ of our $Ax=b$ discretization are just like for
+Part I.  However, $A$ is somewhat different. To construct a first we
+note these equations.
+
+\[
+  u[i] = u[i]
+\]
+\[
+  u'[i] = \frac{u[i+1]-u[i-1]}{2h}
+\]
+\[
+  u''[i] = \frac{u[i+1]-2u[i]+u[i-1]}{h^2}
+\]
+
+The differential equation's LHS is just a linear combination of these
+three kinds of variables which all can be expressed in $u[i]$ and can
+hence be factored out to be the $x$ part of $Ax=b$. To actually
+construct $A$ is now doable, it's just the sum of three matrices
+corresponding for the three terms $u[i]$, $u'[i]$ and $u''[i]$. $A$ will
+again be tridiagonal. The diagonal will be affected by the $u[i]$ term
+and the $u''[i]$ term while the two outer diagonals will be affected by
+$u'[i]$ term and again the $u''[i]$ term. For matrix term corresponding
+to the $u[i]$ part is $\lambda*I$ where $I$ is the $n$ by $n$ identity
+matrix.
+
+\subsection{The Positive Definite Constraint}
+
+A requirement for both Steepest descent and conjugate gradient is that
+the matrix $A$ in $Ax=b$ is Positive definite. I checked by construction
+that all matrices are positive definite, so luckily it doesn't impose
+any problem. If it however would pose a problem, one could always solve
+the system $A^{*}Ax=A^{*}b$ since $A^*A$ is always positive definite and
+gets carried out in $O(1)$ for tridiagonal $A$.
+
+
+
+
+
+
+
+
+
+
 \subsection{Example pic!}
 
 \begin{figure}
