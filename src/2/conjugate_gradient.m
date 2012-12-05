@@ -5,7 +5,7 @@ x_old = zeros(length(A), 1);
 r_old = b;
 p_old = r_old;
 
-for i=1:100
+for i=1:100000
   alpha = r_old'*r_old/(p_old'*A*p_old);
   x_old = x_old + alpha*p_old;
   r = r_old - alpha*A*p_old;
