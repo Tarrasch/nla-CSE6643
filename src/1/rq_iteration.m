@@ -7,7 +7,7 @@ v_old = v_guess;
 iterations = 0;
 lambda = rayleigh_quotient(A, v_old);
 M = A-lambda*eye(m);
-while abs(det(M)) < 0.000001
+while abs(det(M)) > 0.000001
   iterations = iterations + 1;
   w = M\v_old;
   v_old = w/norm(w);
