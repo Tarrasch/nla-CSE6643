@@ -1,4 +1,4 @@
-function [ v_old ] = power_iteration( A )
+function [ v_old, value, k ] = power_iteration( A )
 %POWER_ITERATION Yields eigenvector corresponding to highest eigenvalue
 
 [m, ign] = size(A);
@@ -10,4 +10,4 @@ for k = 2:101
   v_old = w/norm(w);
 
 end
-
+value = rayleigh_quotient(A, v_old);

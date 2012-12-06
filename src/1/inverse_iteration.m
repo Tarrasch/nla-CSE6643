@@ -1,4 +1,4 @@
-function [ v_old ] = inverse_iteration( A, mu )
+function [ v_old, value, k ] = inverse_iteration( A, mu )
 %INVERSE_ITERATION Yields ev corresponding to provided ew estimate mu
 
 [m, ign] = size(A);
@@ -10,4 +10,4 @@ for k = 2:101
   v_old = w/norm(w);
 
 end
-
+value = rayleigh_quotient(A, v_old);

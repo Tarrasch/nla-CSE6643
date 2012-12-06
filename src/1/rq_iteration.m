@@ -1,4 +1,4 @@
-function [ v_old, iterations ] = rq_iteration( A, v_guess )
+function [ v_old, value, iterations ] = rq_iteration( A, v_guess )
 %RQ_ITERATION Get an eigenvector given a close guess of it
 
 [m, ign] = size(A);
@@ -14,4 +14,4 @@ while abs(det(M)) > 0.000001
   lambda = rayleigh_quotient(A, v_old);
   M = A-lambda*eye(m);
 end
-
+value = rayleigh_quotient(A, v_old);

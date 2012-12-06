@@ -7,6 +7,10 @@ x = h:h:1-h; % x is the vector x. not the Ax=b thingie!
 lambda = 1.0;
 a = @(x) diag(sparse(x)); % sparse diag
 a_prime = @(x) sparse(1:length(x), 1:length(x), 1); % sparse eye
+% a = @(x) sparse(1:length(x), 1:length(x), 2); % sparse eye
+% a_prime = @(x) sparse(length(x), length(x));
+% a = @(x) sparse(length(x), length(x));
+% a_prime = @(x) sparse(length(x), length(x));
 
 on = ones(1, n-1);
 h0_part = sparse(1:n, 1:n, lambda);
