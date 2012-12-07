@@ -386,11 +386,16 @@ conditioned.
 
 \subsubsection{Steepest Descent (SD) and Conjugate Gradients (CG)}
 
-The only interesting parts of these algorithms is the termination
-conditions. It can be proven that the SD method will converge in
-$O(\kappa(A))$ steps and CG only need the square root of that.
-I'll let SD run for exactly $\kappa(A)$ iterations and CG run for
-$\sqrt{\kappa(A)}$ iterations.
+The only interesting parts of these algorithms is the termination conditions.
+It can be proven that the SD method will converge in $O(\kappa(A))$ steps and
+CG only need the square root of that.  I'll let SD run for exactly $\kappa(A)$
+iterations and CG run for $\sqrt{\kappa(A)}$ iterations. Of course the ordo
+notation means that some constant is involved I've simply ignored that, but I
+saw no reason why $1$ should be worse than any other constant.
+
+In practice, calculating $\kappa(A)$ is computationally expensive, so instead I
+only get the 1-norm condition number, again using matlabs \texttt{condest}
+which is extremely fast for sparse matrices.
 
 \subsection{Results and Comments}
 
