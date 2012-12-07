@@ -31,6 +31,7 @@ if ~exists('time_cg')
   storeVar = @(var) store(num2str(evalin('base',var)), var);
   storeVar('cond_estimate')
   storeVar('time_cg')
+  persist(x_cg, 'x_cg')
 
   p = myplot(x_cg);
   xlabel('x')
@@ -51,6 +52,7 @@ if ~exists('time_cg')
     % Storing
     storeVar = @(var) store(num2str(evalin('base',var)), var);
     storeVar('time_sd')
+    persist(x_sd, 'x_sd')
   else
     store('\?','time_sd')
   end
