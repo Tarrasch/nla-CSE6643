@@ -290,19 +290,23 @@ explanation is that it's convergence is cubic. See table
 
 \section{Part II}
 
-Before anything lets just rewrite the equation to
+Before anything lets just rewrite the equation to form that is easier to
+reason about
 
 \[
   \lambda u(x) - a'(x)u'(x) - a(x)u''(x) = x - \frac{1}{2}
 \]
 
-\subsection{Discretization}
+\subsection{Method}
 
+Again
 
+\subsubsection{Discretization}
 
 We note that $b$ and $x$ of our $Ax=b$ discretization are just like for
 Part I.  However, $A$ will be different. To construct $A$, we start by
-recalling the centered difference scheme.
+recalling the centered difference scheme (this is one way of doing it,
+see discussion of the symmetricity constraint).
 
 \[
   u[i] = u[i]
@@ -321,18 +325,49 @@ construct $A$ is now doable, it's just the sum of three matrices
 corresponding for the three terms $u[i]$, $u'[i]$ and $u''[i]$. $A$ will
 again be tridiagonal. The diagonal will be affected by the $u[i]$ term
 and the $u''[i]$ term while the two outer diagonals will be affected by
-$u'[i]$ term and again the $u''[i]$ term. For matrix term corresponding
+$u'[i]$ term and again the $u''[i]$ term. The matrix term corresponding
 to the $u[i]$ part is $\lambda I$ where $I$ is the $n$ by $n$ identity
 matrix.
 
-\subsection{The Positive Definite Constraint}
+\subsubsection{The constraints and resolving of violations}
+
+Both steepest descent and the conjugate gradients method require
+$A$ to be hermitian and positive semidefinite. Lets investigate!
+
+\paragraph{The Positive Definite Constraint}
 
 A requirement for both Steepest descent and conjugate gradient is that
 the matrix $A$ in $Ax=b$ is Positive definite. I checked by construction
 that all matrices are positive definite, so luckily it doesn't impose
-any problem. If it however would pose a problem, one could always solve
-the system $A^{*}Ax=A^{*}b$ since $A^*A$ is always positive definite and
-gets carried out in $O(1)$ for tridiagonal $A$.
+any problem.
+
+\paragraph{The symmetry constraint}
+
+For the $a(x) = 2$ it's obvious that $A$ is symmetric as the whole
+$u'(x)$ term will be canceled out by $a'(x) = 0$. Note from the
+discretized symmetric difference equations that only the $u'[x]$
+equation will cause an imbalance since the term in front of $u''(x)$
+(that is $a(x)$) will only be the constant $2$. But at a first glance
+one might expect to not be as lucky when $a(x) = x$ since now the
+$u'(x)$ will be part of $A$.  Yet now also the $u''(x)$ term is affected
+since $a(x)$ is no longer a constant. By doing the math one can prove
+that $A_{(i+1)i} = A_{i(i+1}$.
+
+Hence, the symmetric difference scheme you use will have an enormous
+impact. If for instance you let the $u''(x)$ term affect
+$A_{i(i+2)}=A_{(i+2)i}$ instead of $A_{i(i+1)}=A_{(i+1)i}$ you deal with
+the issues of $A$ not being symmetric and CG nor SD could be applied
+directly.
+
+\paragraph{If we wouldn't be as lucky}
+
+The fact that the matrix always turned out to be symmetric is nothing
+but a miracle. Would got not have blessed us in our calculations, one
+would have been able to try to solve the system $A^{*}Ax=A^{*}b$ since
+$A^*A$ is always positive definite and symmetric.  It even gets carried
+out in linear time for tridiagonal $A$! But one will suffer a squaring
+of the condition number making the new equation system much more ill
+conditioned.
 
 
 
