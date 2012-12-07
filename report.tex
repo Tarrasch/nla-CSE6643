@@ -77,8 +77,8 @@ corresponding to the largest eigenvalue.
 
 \subsubsection{Inverse Iteration (II)}
 
-Again I decided to use $e_1$ as my eigenvector guess $v^{(0)}$.
-Unlike Power Iteration though some understanding of $A$ is required, I
+Again I decided to use $e_1$ as my eigenvector guess $v^{(0)}$.  Unlike
+when using Power Iteration, some understanding about $A$ is required, I
 must provide an eigenvalue close to the one I want. In order to find a
 value that always is close to the smallest eigenvalue I decided to
 experiment with $A$ for various $n$. My conclusion was that the smallest
@@ -89,7 +89,7 @@ reasonable.
 
 While the book again provided most of the guidance, to arbitrarily pick
 a vector like $e_1$ as initial guess is not possible since this
-iteration will actually converge to the eigenvector most close to your
+iteration will actually converge to the eigenvector closest to your
 guess. Also, even though I know that the eigenvalues always seem to be
 within the range $(0.0, 4.0)$, I must in fact know a
 eigen\emph{vector} estimate this time.
@@ -107,7 +107,7 @@ As for PI, I found it hard to construct a sensible termination condition
 without polluting the results, so I decided to use a fixed number of
 iterations. The II continues until the improvement becomes smaller than
 $10^{-14}$. The Rayleigh Quotient termination condition was tricky.
-Intuitively one should keep iterating while $M=A-\lambda^{k}I$ is "very
+Intuitively one should keep iterating while $M=A-\lambda^{(k)}I$ is "very
 nonsingular", which corresponds to having a determinant that is bigger
 than some constant. But that turned out to not work because of rounding
 issues. The determinant won't go below a certain limit and that limit
@@ -239,9 +239,9 @@ quickly.
 
 In the tables, $\lambda_1$ and $\lambda_n$ is the largest and the
 smallest eigenvalues respectively. They of course vary with $n$. We also
-consider it to be known fact that they approach $4.0$ and $1.0$
-respectively as $n$ grows. I also compare my values to the eigenvalues
-returned by Matlab's \texttt{eig} method. For instance
+consider it to be known fact that they approach $4.0$ and $0.0$
+as $n$ grows. I also compare my values to the eigenvalues
+returned by Matlab's \texttt{eig} function. For instance
 ${\lambda_1}_{ML}$ is the biggest of the eigenvalues that matlab finds.
 
 \subsubsection{Accuracy}
@@ -331,8 +331,8 @@ see discussion of the symmetricity constraint).
   u''[i] = \frac{u[i+1]-2u[i]+u[i-1]}{h^2}
 \]
 
-The differential equation's LHS is just a linear combination of these
-three kinds of variables which all can be expressed in $u[i]$ and can
+The differential equation's LHS is just a combination of these
+three kinds of variables which all can be expressed in $u[i]$ and
 hence be factored out to be the $x$ part of $Ax=b$. To actually
 construct $A$ is now doable, it's just the sum of three matrices
 corresponding for the three terms $u[i]$, $u'[i]$ and $u''[i]$. $A$ will
@@ -357,8 +357,8 @@ any problem.
 \paragraph{The symmetry constraint}
 
 For the $a(x) = 2$ it's obvious that $A$ is symmetric as the whole
-$u'(x)$ term will be canceled out by $a'(x) = 0$. Note from the
-discretized symmetric difference equations that only the $u'[x]$
+$u'(x)$ term will be canceled out by $a'(x) = 0$. Studying the
+discretized symmetric difference equations reveals that only the $u'[x]$
 equation will cause an imbalance since the term in front of $u''(x)$
 (that is $a(x)$) will only be the constant $2$. But at a first glance
 one might expect to not be as lucky when $a(x) = x$ since now the
@@ -390,7 +390,7 @@ $O(\kappa(A))$ steps and CG only need the square root of that.
 I'll let SD run for exactly $\kappa(A)$ iterations and CG run for
 $\sqrt{\kappa(A)}$ iterations.
 
-\subsection{Results}
+\subsection{Results and Comments}
 
 It's very clear from the graphs that neither algorithm did converge to
 what it's supposed to. Not only are the graphs for various $n$ quite
