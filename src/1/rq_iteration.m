@@ -6,12 +6,12 @@ v_old = v_guess;
 
 iterations = 0;
 lambda = rayleigh_quotient(A, v_old);
-M = A-lambda*eye(m);
+M = A-sparse(1:m,1:m, lambda);
 while abs(det(M)) > 0.000001
   iterations = iterations + 1;
   w = M\v_old;
   v_old = w/norm(w);
   lambda = rayleigh_quotient(A, v_old);
-  M = A-lambda*eye(m);
+  M = A-sparse(1:m,1:m, lambda);
 end
 value = rayleigh_quotient(A, v_old);

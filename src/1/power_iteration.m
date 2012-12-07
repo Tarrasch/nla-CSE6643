@@ -5,7 +5,7 @@ function [ v_old, value, k ] = power_iteration( A )
 v_old = zeros(m,1);
 v_old(1) = 1;
 
-for k = 2:101
+for k = 1:100
   w = A*v_old;
   v_old = w/norm(w);
 

@@ -5,8 +5,9 @@ function [ ] = tofile( problem, content, filename, n)
 %   filename = "1-eigenvalue" (without n and full path)
 
 if n >= 100
-  path = ['data/' problem '-' filename '-' num2str(n) '.dat']
-  system(['echo ' content ' > ' path]);
+  path = ['data/' problem '-' filename '-' num2str(n) '.dat'];
+  cmd = ['echo ' content ' > ' path];
+  system(cmd);
 end
 
 end

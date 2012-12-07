@@ -54,6 +54,101 @@ be a tridiagonal matrix with only $-2$ in the diagonal and $1$ in its
 sub- and super diagonal. Set $b_i$ to $(1/2-i*h)h^2$. $x_i$ is simply
 $u[i]$ in this scheme.
 
+\subsection{Method}
+
+\subsection{Results}
+
+\newcommand{\foralln}[1] {
+  #1{100}
+  #1{200}
+  #1{400}
+  #1{800}
+  #1{1600}
+  #1{3200}
+}
+
+\newcommand{\pimacro}[1] {
+  \ensuremath{n=#1} & \input{data/1-pi_conv_ratio-#1.dat}
+                    & \input{data/1-diff_largest-#1.dat}
+                    & \input{data/1-it_l-#1.dat}
+                    \\ \cline{2-4}
+}
+\begin{table}[h]
+  \begin{tabular}{r|c|c|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{$1-{\lambda_2}_{ML}/{\lambda_1}_{ML}$}
+     & \multicolumn{1}{c}{${\lambda_1}_{ML}-{\lambda_1}_{PI}$}
+     & \multicolumn{1}{c}{$iterations_{PI}$}\\
+    \cline{2-4}
+    \foralln{\pimacro}
+  \end{tabular}
+  \caption{The results of using power iteration to get the largest eigenvalue}
+  \label{tab:powerit}
+\end{table}
+
+\newcommand{\iimacro}[1] {
+  \ensuremath{n=#1} & \input{data/1-diff_smallest-#1.dat}
+                    & \input{data/1-it_s-#1.dat}
+                    \\ \cline{2-3}
+}
+\begin{table}[h]
+  \begin{tabular}{r|c|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{${\lambda_n}_{ML}-{\lambda_n}_{II}$}
+     & \multicolumn{1}{c}{$iterations_{II}$}\\
+    \cline{2-3}
+    \foralln{\iimacro}
+  \end{tabular}
+  \caption{The results of using inverse iteration to get the smallest eigenvalue}
+  \label{tab:inverit}
+\end{table}
+
+\newcommand{\rqimacro}[1] {
+  \ensuremath{n=#1} & \input{data/1-diff_rq_largest-#1.dat}
+                    & \input{data/1-it_rq_l-#1.dat}
+                    & \input{data/1-diff_rq_smallest-#1.dat}
+                    & \input{data/1-it_rq_s-#1.dat}
+                    \\ \cline{2-5}
+}
+\begin{table}[h]
+  \begin{tabular}{r|c|c|c|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{${\lambda_1}_{ML}-{\lambda_1}_{rqI}$}
+     & \multicolumn{1}{c}{$iterations_{rqI}$}
+     & \multicolumn{1}{c}{${\lambda_n}_{ML}-{\lambda_n}_{rqI}$}
+     & \multicolumn{1}{c}{$iterations_{rqI}$}\\
+    \cline{2-5}
+    \foralln{\rqimacro}
+  \end{tabular}
+  \caption{The results of using rayleigh quotient iteration to get both the
+  extreme eigenvalues}
+  \label{tab:rqit}
+\end{table}
+% \newcommand{\genfig}[3] {{
+%     \begin{figure}
+%             \centering
+%             \begin{subfigure}[b]{1.0\textwidth}
+%                     \includegraphics[width=\textwidth]{fig/#1-#2-100}
+%                     \caption{$n = 100$}
+%             \end{subfigure}
+%             \begin{subfigure}[b]{1.0\textwidth}
+%                     \includegraphics[width=\textwidth]{fig/#1-#2-150}
+%                     \caption{$n = 150$}
+%             \end{subfigure}
+%             \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
+%     \end{figure}
+%   }}
+
+\subsection{Comparing Inverse iteration with Power iteration}
+
+Theoretcially, an increasing n works in the favor of the inverse iteration but
+against the power iteration. In the Inverse iteration case, our lowest
+eigenvalue estimate $\mu=0$ is getting closer and closer to the actual
+lowest eigenvalue when $n$ increases. However, for power iteration, an
+increasing $n$ means that the convergence factor $\lambda_2/\lambda_1$
+decreases making power iteration requiring more and more iterations to
+achieve the same accuracy.
+
 \section{Part II}
 
 \subsection{Discretization}
@@ -103,83 +198,83 @@ gets carried out in $O(1)$ for tridiagonal $A$.
 
 \subsection{Example pic!}
 
-\begin{figure}
-        \begin{subfigure}[b]{1.0\textwidth}
-          \includegraphics[width=\textwidth]{fig/all.png}
-          \caption{The whole plot}\label{fig:wholeplot}
-        \end{subfigure}
+% \begin{figure}
+%         \begin{subfigure}[b]{1.0\textwidth}
+%           \includegraphics[width=\textwidth]{fig/all.png}
+%           \caption{The whole plot}\label{fig:wholeplot}
+%         \end{subfigure}
 
-        \begin{subfigure}[b]{1.0\textwidth}
-          \includegraphics[width=\textwidth]{fig/azoom.png}
-          \caption{One zooming}\label{fig:zooming}
-        \end{subfigure}
-        \caption{Plots of $u(x)$. The red line is the actual function.
-        The others are estimations. The greener the line the higher
-      $n$.}\label{fig:plots}
-\end{figure}
+%         \begin{subfigure}[b]{1.0\textwidth}
+%           \includegraphics[width=\textwidth]{fig/azoom.png}
+%           \caption{One zooming}\label{fig:zooming}
+%         \end{subfigure}
+%         \caption{Plots of $u(x)$. The red line is the actual function.
+%         The others are estimations. The greener the line the higher
+%       $n$.}\label{fig:plots}
+% \end{figure}
 
 
-\section{Table example}
+% \section{Table example}
 
-\begin{table}[h]
-  \begin{tabular}{r|c|c|c|}
-    \multicolumn{1}{r}{}
-     & \multicolumn{1}{c}{$Q_{classic}$ }
-     & \multicolumn{1}{c}{$Q_{stable}$}
-     & \multicolumn{1}{c}{$Q_{householder}$} \\
-    \cline{2-4}
-    $n=100$ & \input{data/norm-q-classi-100.dat}
-            & \input{data/norm-q-stable-100.dat}
-            & \input{data/norm-q-househ-100.dat}
-            \\ \cline{2-4}
-    $n=150$ & \input{data/norm-q-classi-150.dat}
-            & \input{data/norm-q-stable-150.dat}
-            & \input{data/norm-q-househ-150.dat}
-            \\ \cline{2-4}
-  \end{tabular}
-  \caption{Norms for the different unitary $Q$ matrices}
-  \label{tab:norms}
-\end{table}
+% \begin{table}[h]
+%   \begin{tabular}{r|c|c|c|}
+%     \multicolumn{1}{r}{}
+%      & \multicolumn{1}{c}{$Q_{classic}$ }
+%      & \multicolumn{1}{c}{$Q_{stable}$}
+%      & \multicolumn{1}{c}{$Q_{householder}$} \\
+%     \cline{2-4}
+%     $n=100$ & \input{data/norm-q-classi-100.dat}
+%             & \input{data/norm-q-stable-100.dat}
+%             & \input{data/norm-q-househ-100.dat}
+%             \\ \cline{2-4}
+%     $n=150$ & \input{data/norm-q-classi-150.dat}
+%             & \input{data/norm-q-stable-150.dat}
+%             & \input{data/norm-q-househ-150.dat}
+%             \\ \cline{2-4}
+%   \end{tabular}
+%   \caption{Norms for the different unitary $Q$ matrices}
+%   \label{tab:norms}
+% \end{table}
 
-\begin{table}[h]
-  \begin{tabular}{r|c|c|c|}
-    \multicolumn{1}{r}{}
-     & \multicolumn{1}{c}{$Q_{classic}$ }
-     & \multicolumn{1}{c}{$Q_{stable}$}
-     & \multicolumn{1}{c}{$Q_{householder}$} \\
-    \cline{2-4}
-    $n=100$ & \input{data/std-q-classi-100.dat}
-            & \input{data/std-q-stable-100.dat}
-            & \input{data/std-q-househ-100.dat}
-            \\ \cline{2-4}
-    $n=150$ & \input{data/std-q-classi-150.dat}
-            & \input{data/std-q-stable-150.dat}
-            & \input{data/std-q-househ-150.dat}
-            \\ \cline{2-4}
-  \end{tabular}
-  \caption{The standard deviation for the values of $A-QR$}
-  \label{tab:stds}
-\end{table}
+% \begin{table}[h]
+%   \begin{tabular}{r|c|c|c|}
+%     \multicolumn{1}{r}{}
+%      & \multicolumn{1}{c}{$Q_{classic}$ }
+%      & \multicolumn{1}{c}{$Q_{stable}$}
+%      & \multicolumn{1}{c}{$Q_{householder}$} \\
+%     \cline{2-4}
+%     $n=100$ & \input{data/std-q-classi-100.dat}
+%             & \input{data/std-q-stable-100.dat}
+%             & \input{data/std-q-househ-100.dat}
+%             \\ \cline{2-4}
+%     $n=150$ & \input{data/std-q-classi-150.dat}
+%             & \input{data/std-q-stable-150.dat}
+%             & \input{data/std-q-househ-150.dat}
+%             \\ \cline{2-4}
+%   \end{tabular}
+%   \caption{The standard deviation for the values of $A-QR$}
+%   \label{tab:stds}
+% \end{table}
 
-\newcommand{\genfig}[3] {{
-    \begin{figure}
-            \centering
-            \begin{subfigure}[b]{1.0\textwidth}
-                    \includegraphics[width=\textwidth]{fig/#1-#2-100}
-                    \caption{$n = 100$}
-            \end{subfigure}
-            \begin{subfigure}[b]{1.0\textwidth}
-                    \includegraphics[width=\textwidth]{fig/#1-#2-150}
-                    \caption{$n = 150$}
-            \end{subfigure}
-            \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
-    \end{figure}
-  }}
+% \newcommand{\genfig}[3] {{
+%     \begin{figure}
+%             \centering
+%             \begin{subfigure}[b]{1.0\textwidth}
+%                     \includegraphics[width=\textwidth]{fig/#1-#2-100}
+%                     \caption{$n = 100$}
+%             \end{subfigure}
+%             \begin{subfigure}[b]{1.0\textwidth}
+%                     \includegraphics[width=\textwidth]{fig/#1-#2-150}
+%                     \caption{$n = 150$}
+%             \end{subfigure}
+%             \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
+%     \end{figure}
+%   }}
 
-\genfig{log-median-col}{Q}{logarithmized}
-\genfig{median-row}{Q}{}
-\genfig{log-median-col}{R}{logarithmized}
-\genfig{log-median-row}{R}{logarithmized}
+% \genfig{log-median-col}{Q}{logarithmized}
+% \genfig{median-row}{Q}{}
+% \genfig{log-median-col}{R}{logarithmized}
+% \genfig{log-median-row}{R}{logarithmized}
 
 
 \end{document}
