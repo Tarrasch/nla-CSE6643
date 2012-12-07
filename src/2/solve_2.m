@@ -36,18 +36,18 @@ if ~exists('time_cg')
     x_sd = steepest_descent(S, b);
     time_sd = toc;
 
-    % Plotting
-    % myplot = @(values) plot(0:h:1, [0; values; 0]);
-    % p = myplot(x_sd);
-    % xlabel('x')
-    % ylabel('u(x)')
-    % set(p,'Color', [((log2(m)-5.64)/6.2) 0 (1-(log2(m)-5.64)/6.2)]);
-    % p = myplot(x_cg);
-    % xlabel('x')
-    % ylabel('u(x)')
-    % set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
+    Plotting
+    myplot = @(values) plot(0:h:1, [0; values; 0]);
+    p = myplot(x_sd);
+    xlabel('x')
+    ylabel('u(x)')
+    set(p,'Color', [((log2(m)-5.64)/6.2) 0 (1-(log2(m)-5.64)/6.2)]);
+    p = myplot(x_cg);
+    xlabel('x')
+    ylabel('u(x)')
+    set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
 
-    % Storing
+    Storing
 
     storeVar = @(var) store(num2str(evalin('base',var)), var);
     storeVar('time_sd')

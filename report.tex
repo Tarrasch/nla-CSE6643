@@ -59,7 +59,7 @@ to the given initial values and $u[i]$ exists for $i = 1..n$.
 Now we want to form the typical equation $Ax=b$ such that solving for
 $x$ gives all $u[i]$. The equation above gives us this scheme: Let $A$
 be a tridiagonal matrix with only $-2$ in the diagonal and $1$ in its
-sub- and super diagonal. Set $b_i$ to $(1/2-i*h)h^2$. $x_i$ is simply
+sub- and super diagonal. Set $b_i$ to $(1/2-ih)h^2$. $x_i$ is simply
 $u[i]$ in this scheme.
 
 
@@ -312,7 +312,9 @@ reason about
 
 \subsection{Method}
 
-Again
+Again we start with discretizing the problem. Then we'll verify that the matrix
+the discretization yields is satisfying all necessary constraints and then go
+on to determine suitable termination conditions for our algorithms.
 
 \subsubsection{Discretization}
 
@@ -392,9 +394,13 @@ $\sqrt{\kappa(A)}$ iterations.
 
 \subsection{Results and Comments}
 
-It's very clear from the graphs that neither algorithm did converge to
-what it's supposed to. Not only are the graphs for various $n$ quite
-different, but across the algorithms the they've almost clustered.
+It's very clear from the graphs that neither algorithm did converge to what
+it's supposed to. Not only are the graphs for various $n$ quite different
+(particularly the CG ones), and across the two algorithms it's even worse, they
+seem to almost solve different problems. But the actual explanation I think is
+the lack of iteration on CG's behalf.
+
+\subsection{The tables}
 
 We notice a couple of details here. First, a large $\lambda$ decreases the
 condition number of $A$. Compare table \ref{tab:ct-id-1000} and
@@ -405,18 +411,37 @@ the two algorithm. Yet we did have a very sound reasoning when choosing
 those conditions and I bet high quality software has similar termination
 conditions (albeit they do preconditioning and use other cool tricks).
 
-Furthermore, in the cases where the condition number is small, which is
-when either $\lambda$ is large or simply when $n$ is small, the
-performence of the SD isn't worse than that of CG. However, as the
-condition number grows, the execution time for SD becomes unbearable while
-the CG time is still faster than human perception.
+Furthermore, in the cases where the condition number is small, which is when
+either $\lambda$ is large or simply when $n$ is small, SD isn't slower than CG.
+However, as the condition number grows, the execution time for SD becomes
+unbearable while the CG time is still faster than human perception.
 
-Just like in Part 1 We observe that the condition number increases at
-the same rate as the number of elements in the Array. In part 1 it
-were bad because of the arithmetical errors that made the termination
-conditions for rayleigh quotient difficult. Here, it means that
-\emph{the execution time of conjugate gradients increase linearly with
-$n$ for the same sort of matrices}
+Just like in Part 1 We observe that the condition number increases at the same
+rate as the number of elements in the Array. In part 1 it were bad because of
+the arithmetical errors that made the termination conditions for rayleigh
+quotient difficult. Here, it means that \emph{the execution time of conjugate
+gradients increase linearly with $n$ for the same sort of matrices} given that
+we use the current termination condition.
+
+\subsubsection{The graphs}
+
+The graphs are colored like this: CG are the green ones and the greener the
+larger $n$. The blue/red lines are the answers of the SD method. The redder the
+larger the $n$.
+
+While it's not possible to say for sure, I suspect the blueish lines are the
+correct ones, because they are grouped meaning that at least the algorithm
+agrees with itself.
+
+I believe that the CG method, while in theory only requiring the square root of
+the number of steps that SD requires, is suffering from its difficult promise.
+Note that the output $x$ is initialized too the zero vector in CG, and as
+iterations pass it tries to expand beyond that but don't have enough time. For
+the darker green lines, those with a smaller $n$ and that solves a simpler
+problem, it's sometimes visible (like in Figure \ref{fig:const-10}) that they
+stretch away from the line $y=0$ but don't have time to go all way. Yet this is
+the power of iterative methods, one can quit mid way and still get a reasonable
+result.
 
 
 \newcommand{\ctentries}[3] {
@@ -471,7 +496,7 @@ $n$ for the same sort of matrices}
 \genfig{const}{10}
 \genfig{const}{1}
 \genfig{const}{-1}
-\genfig{id}{1}
+% \genfig{id}{1}
 \genfig{id}{10}
 \genfig{id}{100}
 \genfig{id}{1000}
