@@ -16,6 +16,7 @@ ml_smallest = ml_eigs(end);
 [v_rq_l, my_rq_largest, it_rq_l] = rq_iteration(S, ev_guess(n, true));
 [v_rq_s, my_rq_smallest, it_rq_s] = rq_iteration(S, ev_guess(n, false));
 
+cond_A = round(condest(S));
 pi_conv_ratio = 1-ml_eigs(2)/ml_eigs(1);
 diff_largest = ml_largest - my_largest;
 diff_smallest = ml_smallest - my_smallest;
@@ -23,6 +24,8 @@ diff_rq_largest = ml_largest - my_rq_largest;
 diff_rq_smallest = ml_smallest - my_rq_smallest;
 
 storeVar = @(var) store(num2str(evalin('base',var)), var);
+
+storeVar('cond_A')
 
 storeVar('pi_conv_ratio')
 storeVar('diff_largest')

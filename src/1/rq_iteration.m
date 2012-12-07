@@ -7,7 +7,7 @@ v_old = v_guess;
 iterations = 0;
 lambda = rayleigh_quotient(A, v_old);
 M = A-sparse(1:m,1:m, lambda);
-while abs(det(M)) > 0.000001
+while abs(det(M)) > condest(A)*1e-10
   iterations = iterations + 1;
   w = M\v_old;
   v_old = w/norm(w);

@@ -3,7 +3,7 @@ function [ x_old ] = steepest_descent( A, b )
 
 x_old = b;
 
-for i=1:100000
+for i=1:100
   r = b - A*x_old;
   alpha = r'*r/(r'*A*r);
   x_old = x_old + alpha*r;

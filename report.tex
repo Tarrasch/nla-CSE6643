@@ -34,7 +34,15 @@
 % written gauss elimination and (3) plotting,  timing and commenting on
 % results.
 
-\subsection{Discretization (exactly as previous project)}
+\subsection{Method}
+
+I used power iteration to find the largest eigenvalue and inverse iteration to
+find the smallest. There is really no reason for not using the inverse
+iteration for both. One could have used one for the other but I wanted to try
+both.  I also used the rayleigh quotient iteration to see how much better it
+performs. But first, lets recap how I discretize the problem.
+
+\subsubsection{Discretization (exactly as previous project)}
 
 For $n$ interior points we have $m=n+1$ interior slices. We define $h$
 to $1/m$ which is the distance between the points. With this a natural
@@ -54,17 +62,94 @@ be a tridiagonal matrix with only $-2$ in the diagonal and $1$ in its
 sub- and super diagonal. Set $b_i$ to $(1/2-i*h)h^2$. $x_i$ is simply
 $u[i]$ in this scheme.
 
-\subsection{Method}
 
-\subsection{Results}
+\subsubsection{Power Iteration (PI)}
 
-\newcommand{\foralln}[1] {
+I implemented the version in the course book.  $e_1$ was set to the
+initial guess of eigenwector since I didn't find any analysis that
+motivated that taking any particular normal vector would help the
+convergence of the algorithm.
+
+To actually retrieve the largest eigenvalue from the vector that power
+iteration returns, you just take the rayleigh quotient of that vector.
+Note that the vector should hopefully be coverging to the eigenvector
+corresponding to the largest eigenvalue.
+
+\subsubsection{Inverse Iteration (II)}
+
+Again I decided to use $e_1$ as my eigenvector guess $v^{(0)}$.
+Unlike Power Iteration though some understanding of $A$ is required, I
+must provide an eigenvalue close to the one I want. In order to find a
+value that always is close to the smallest eigenvalue I decided to
+experiment with $A$ for various $n$. My conclusion was that the smallest
+eigenvalue is approaching $1.0$ as $n$ increases. Therfor $\mu=1.0$ is
+reasonable.
+
+\subsubsection{Rayleigh Quotient Iteration (RQI)}
+
+While the book again provided most of the guidance, to arbitrarily pick
+a vector like $e_1$ as initial guess is not possible since this
+iteration will actually converge to the eigenvector most close to your
+guess. Also, even though I know that the eigenvalues always seem to be
+within the range $(1.0, 4.0)$, I must in fact know a
+eigen\emph{vector} estimate this time.
+
+By experimenting like I did when deciding $\mu$ for inverse iteration, I
+came up with this scheme for constructing an eigenvector like the one
+corresponding to the smallest eigenvalue. That eigenvector is in a
+pattern like this $normalize([4, 5, 6, 7, 7, 6, 5, 4])$ for $n=8$.  This
+pattern is easy to model programtically. The corresponding eigenvector
+for largest eigenvalue is the same only with alternating signs.
+
+\subsubsection{Termination conditions}
+
+As for PI, I found it hard to construct a sensible termination condition
+without polluting the results, so I decided to use a fixed number of
+iterations. The II continues until the improvement becomes smaller than
+$10^{-14}$. The Rayleigh Quotient termination condition was tricky.
+Intuitively one should keep iterating while $M=A-\lambda^{k}I$ is "very
+nonsingular", which corresponds to having a determinant that is bigger
+than some constant. But that turned out to not work because of rounding
+issues. The determinant won't go below a certain limit and that limit
+increases with $n$, hence the constant that decides if the determinant
+is small enough has to increase with $n$. One such value that worked out
+was $\kappa(A)10^{-10}$. I noted that no matter what limit I tried I
+never got beyond two iterations though! See table \ref{tab:conda} for
+the condition numbers
+
+\subsubsection{Sparsity}
+
+I will not demonstrate any evidence here, but I used matlabs sparse
+matrices everywhere to \emph{massively} improve the performence and
+allowing larger $n$ to be tried out. So it indeed was not any fancy
+hardware that allowed for a large $n$, rather, it was a good algorithm.
+
+\subsubsection{Condition number}
+
+I used the condition number estimate \texttt{condest} in matlab that can
+use the fact that the matrix is sparse to estimate the condition number
+quickly.
+
+
+\newcommand{\fornSix}[1] {
   #1{100}
   #1{200}
   #1{400}
   #1{800}
   #1{1600}
   #1{3200}
+}
+
+\newcommand{\fornEight}[1] {
+  \fornSix{#1}
+  #1{6400}
+  #1{12800}
+}
+
+\newcommand{\fornTen}[1] {
+  \fornEight{#1}
+  #1{25600}
+  #1{51200}
 }
 
 \newcommand{\pimacro}[1] {
@@ -74,15 +159,16 @@ $u[i]$ in this scheme.
                     \\ \cline{2-4}
 }
 \begin{table}[h]
+  \centering
   \begin{tabular}{r|c|c|c|}
     \multicolumn{1}{r}{}
      & \multicolumn{1}{c}{$1-{\lambda_2}_{ML}/{\lambda_1}_{ML}$}
      & \multicolumn{1}{c}{${\lambda_1}_{ML}-{\lambda_1}_{PI}$}
      & \multicolumn{1}{c}{$iterations_{PI}$}\\
     \cline{2-4}
-    \foralln{\pimacro}
+    \fornEight{\pimacro}
   \end{tabular}
-  \caption{The results of using power iteration to get the largest eigenvalue}
+  \caption{Power iteration to get the largest eigenvalue}
   \label{tab:powerit}
 \end{table}
 
@@ -92,14 +178,15 @@ $u[i]$ in this scheme.
                     \\ \cline{2-3}
 }
 \begin{table}[h]
+  \centering
   \begin{tabular}{r|c|c|}
     \multicolumn{1}{r}{}
      & \multicolumn{1}{c}{${\lambda_n}_{ML}-{\lambda_n}_{II}$}
      & \multicolumn{1}{c}{$iterations_{II}$}\\
     \cline{2-3}
-    \foralln{\iimacro}
+    \fornTen{\iimacro}
   \end{tabular}
-  \caption{The results of using inverse iteration to get the smallest eigenvalue}
+  \caption{Inverse iteration to get the smallest eigenvalue}
   \label{tab:inverit}
 \end{table}
 
@@ -111,19 +198,80 @@ $u[i]$ in this scheme.
                     \\ \cline{2-5}
 }
 \begin{table}[h]
+  \centering
   \begin{tabular}{r|c|c|c|c|}
     \multicolumn{1}{r}{}
-     & \multicolumn{1}{c}{${\lambda_1}_{ML}-{\lambda_1}_{rqI}$}
-     & \multicolumn{1}{c}{$iterations_{rqI}$}
-     & \multicolumn{1}{c}{${\lambda_n}_{ML}-{\lambda_n}_{rqI}$}
-     & \multicolumn{1}{c}{$iterations_{rqI}$}\\
+     & \multicolumn{1}{c}{${\lambda_1}_{ML}-{\lambda_1}_{RQI}$}
+     & \multicolumn{1}{c}{$iterations_{RQI}$}
+     & \multicolumn{1}{c}{${\lambda_n}_{ML}-{\lambda_n}_{RQI}$}
+     & \multicolumn{1}{c}{$iterations_{RQI}$}\\
     \cline{2-5}
-    \foralln{\rqimacro}
+    \fornTen{\rqimacro}
   \end{tabular}
-  \caption{The results of using rayleigh quotient iteration to get both the
-  extreme eigenvalues}
+  \caption{Rayleigh quotient iteration to get both the extreme eigenvalues}
   \label{tab:rqit}
 \end{table}
+
+\newcommand{\condamacro}[1] {
+  \ensuremath{n=#1} & \input{data/1-cond_A-#1.dat}
+                    \\ \cline{2-2}
+}
+\begin{table}[h]
+  \centering
+  \begin{tabular}{r|c|}
+    \multicolumn{1}{r}{}
+     & \multicolumn{1}{c}{$\kappa(A)$} \\
+    \cline{2-2}
+    \fornTen{\condamacro}
+  \end{tabular}
+  \caption{Condition number of $A$}
+  \label{tab:conda}
+\end{table}
+
+\subsection{Results and explenations}
+
+% There are some observations that are interesting whilst others aren't. 
+
+In the tables, $\lambda_1$ and $\lambda_n$ is the largest and the
+smallest eigenvalues respectively. They of course vary with $n$. We also
+consider it to be known fact that they approach $4.0$ and $1.0$
+respectively as $n$ grows. I also compare my values to the eigenvalues
+returned by Matlab's \texttt{eig} method. For instance
+${\lambda_1}_{ML}$ is the biggest of the eigenvalues that matlab finds.
+
+\subsubsection{Accuracy}
+
+The power iteration isn't that impressive and it's clear that the values
+are far away from the correct (matlab's) answer. Furthermore, for most
+$n$ the values start converging extremely slow at about $0.003$. If you
+drastically increase the number of iterations the accuracy will improve.
+
+But for inverse iteration and rayleigh quotient iteration things are not
+as obvious. Is matlab right or is any of my implementations closer to
+the right answer? On one hand matlab is a high quality software but at
+the same time it was instructed to find all eigenvalues but I only aimed
+for a more specialized task which is obviously easier. No matter what
+both those two iterations are extremely close to matlabs answer and each
+other. It's therfor obvious that they work as they should.
+
+\subsubsection{Comparing Inverse iteration with Power iteration}
+
+Theoretically, increasing $n$ works in the favor of inverse
+iteration but against power iteration. In the Inverse iteration
+case, our lowest eigenvalue estimate $\mu=1.0$ is getting closer and
+closer to the actual lowest eigenvalue when $n$ increases. However, for
+power iteration, an increasing $n$ means that the convergence factor
+$\lambda_2/\lambda_1$ decreases which makes power iteration requiring
+more and more iterations to achieve the same accuracy. Both these
+theoretical observations are confirmed in table \ref{tab:powerit}
+and \ref{tab:inverit}.
+
+\subsubsection{Only two iterations!?}
+
+The speed of the rayleigh quotient is astonishing. The theoretical
+explanation is that it's convergence is cubic. See table
+\ref{tab:rqit}.
+
 % \newcommand{\genfig}[3] {{
 %     \begin{figure}
 %             \centering
@@ -139,23 +287,22 @@ $u[i]$ in this scheme.
 %     \end{figure}
 %   }}
 
-\subsection{Comparing Inverse iteration with Power iteration}
-
-Theoretcially, an increasing n works in the favor of the inverse iteration but
-against the power iteration. In the Inverse iteration case, our lowest
-eigenvalue estimate $\mu=0$ is getting closer and closer to the actual
-lowest eigenvalue when $n$ increases. However, for power iteration, an
-increasing $n$ means that the convergence factor $\lambda_2/\lambda_1$
-decreases making power iteration requiring more and more iterations to
-achieve the same accuracy.
 
 \section{Part II}
 
+Before anything lets just rewrite the equation to
+
+\[
+  \lambda u(x) - a'(x)u'(x) - a(x)u''(x) = x - \frac{1}{2}
+\]
+
 \subsection{Discretization}
 
+
+
 We note that $b$ and $x$ of our $Ax=b$ discretization are just like for
-Part I.  However, $A$ is somewhat different. To construct a first we
-note these equations.
+Part I.  However, $A$ will be different. To construct $A$, we start by
+recalling the centered difference scheme.
 
 \[
   u[i] = u[i]
@@ -175,7 +322,7 @@ corresponding for the three terms $u[i]$, $u'[i]$ and $u''[i]$. $A$ will
 again be tridiagonal. The diagonal will be affected by the $u[i]$ term
 and the $u''[i]$ term while the two outer diagonals will be affected by
 $u'[i]$ term and again the $u''[i]$ term. For matrix term corresponding
-to the $u[i]$ part is $\lambda*I$ where $I$ is the $n$ by $n$ identity
+to the $u[i]$ part is $\lambda I$ where $I$ is the $n$ by $n$ identity
 matrix.
 
 \subsection{The Positive Definite Constraint}

@@ -22,7 +22,7 @@ if ~is_posdef(S)
 else
   display ' Hooray, matrix is posdef'
 end
-% A = full(S);
+A = full(S);
 b = (-0.5+h:h:0.5-h)';
 
 tic
