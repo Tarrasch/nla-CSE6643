@@ -25,7 +25,7 @@ if ~exists('time_cg')
   cond_estimate = round(condest(S))
 
   tic
-  x_cg = conjugate_gradient(S, b);
+  x_cg = conjugate_gradient(S, b, tc_cg(S));
   time_cg = toc;
   myplot = @(values) plot(0:h:1, [0; values; 0]);
   storeVar = @(var) store(num2str(evalin('base',var)), var);
@@ -36,10 +36,10 @@ if ~exists('time_cg')
   xlabel('x')
   ylabel('u(x)')
   set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
-  if(cond_estimate < 1000000)
+  if(tc_sd(S) < 1000000)
 
     tic
-    x_sd = steepest_descent(S, b);
+    x_sd = steepest_descent(S, b, tc_sd(S));
     time_sd = toc;
 
     % Plotting

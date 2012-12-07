@@ -1,10 +1,9 @@
-function [ x_old ] = steepest_descent( A, b )
+function [ x_old ] = steepest_descent( A, b, its )
 %STEEPEST_DESCENT Solve Ax = b. A must be positive definite
 
-kappa = condest(A);
 x_old = b;
 
-for i=1:kappa
+for i=1:its
   r = b - A*x_old;
   alpha = r'*r/(r'*A*r);
   x_old = x_old + alpha*r;
