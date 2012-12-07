@@ -23,31 +23,35 @@ if ~exists('time_cg')
   b = (-0.5+h:h:0.5-h)';
 
   cond_estimate = round(condest(S))
+
+  tic
+  x_cg = conjugate_gradient(S, b);
+  time_cg = toc;
+  storeVar = @(var) store(num2str(evalin('base',var)), var);
+  storeVar('cond_estimate')
+  storeVar('time_cg')
   if(cond_estimate < 1000000)
 
     tic
     x_sd = steepest_descent(S, b);
     time_sd = toc;
-    tic
-    x_cg = conjugate_gradient(S, b);
-    time_cg = toc;
 
     % Plotting
-    myplot = @(values) plot(0:h:1, [0; values; 0]);
-    p = myplot(x_sd);
-    xlabel('x')
-    ylabel('u(x)')
-    set(p,'Color', [((log2(m)-5.64)/6.2) 0 (1-(log2(m)-5.64)/6.2)]);
-    p = myplot(x_cg);
-    xlabel('x')
-    ylabel('u(x)')
-    set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
+    % myplot = @(values) plot(0:h:1, [0; values; 0]);
+    % p = myplot(x_sd);
+    % xlabel('x')
+    % ylabel('u(x)')
+    % set(p,'Color', [((log2(m)-5.64)/6.2) 0 (1-(log2(m)-5.64)/6.2)]);
+    % p = myplot(x_cg);
+    % xlabel('x')
+    % ylabel('u(x)')
+    % set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
 
     % Storing
-    storeVar = @(var) store(num2str(evalin('base',var)), var);
 
-    storeVar('cond_estimate')
+    storeVar = @(var) store(num2str(evalin('base',var)), var);
     storeVar('time_sd')
-    storeVar('time_cg')
+  else
+    store('\?','time_sd')
   end
 end
