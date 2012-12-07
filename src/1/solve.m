@@ -22,10 +22,12 @@ diff_largest = ml_largest - my_largest;
 diff_smallest = ml_smallest - my_smallest;
 diff_rq_largest = ml_largest - my_rq_largest;
 diff_rq_smallest = ml_smallest - my_rq_smallest;
+my_cond_A = round(my_rq_largest/my_rq_smallest);
 
 storeVar = @(var) store(num2str(evalin('base',var)), var);
 
 storeVar('cond_A')
+storeVar('my_cond_A')
 
 storeVar('pi_conv_ratio')
 storeVar('diff_largest')

@@ -1,11 +1,12 @@
 function [ x_old ] = conjugate_gradient( A, b )
 %CONJUGATE_GRADIENTS Solve Ax = b. A must be positive definite
 
+kappa = condest(A);
 x_old = zeros(length(A), 1);
 r_old = b;
 p_old = r_old;
 
-for i=1:100
+for i=1:sqrt(kappa)
   alpha = r_old'*r_old/(p_old'*A*p_old);
   x_old = x_old + alpha*p_old;
   r = r_old - alpha*A*p_old;

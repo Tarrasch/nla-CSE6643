@@ -82,7 +82,7 @@ Unlike Power Iteration though some understanding of $A$ is required, I
 must provide an eigenvalue close to the one I want. In order to find a
 value that always is close to the smallest eigenvalue I decided to
 experiment with $A$ for various $n$. My conclusion was that the smallest
-eigenvalue is approaching $1.0$ as $n$ increases. Therfor $\mu=1.0$ is
+eigenvalue is approaching $0.0$ as $n$ increases. Therfor $\mu=0.0$ is
 reasonable.
 
 \subsubsection{Rayleigh Quotient Iteration (RQI)}
@@ -91,7 +91,7 @@ While the book again provided most of the guidance, to arbitrarily pick
 a vector like $e_1$ as initial guess is not possible since this
 iteration will actually converge to the eigenvector most close to your
 guess. Also, even though I know that the eigenvalues always seem to be
-within the range $(1.0, 4.0)$, I must in fact know a
+within the range $(0.0, 4.0)$, I must in fact know a
 eigen\emph{vector} estimate this time.
 
 By experimenting like I did when deciding $\mu$ for inverse iteration, I
@@ -130,10 +130,13 @@ I used the condition number estimate \texttt{condest} in matlab that can
 use the fact that the matrix is sparse to estimate the condition number
 quickly.
 
-
-\newcommand{\fornSix}[1] {
+\newcommand{\fornTwo}[1] {
   #1{100}
   #1{200}
+}
+
+\newcommand{\fornSix}[1] {
+  \fornTwo{#1}
   #1{400}
   #1{800}
   #1{1600}
@@ -214,14 +217,16 @@ quickly.
 
 \newcommand{\condamacro}[1] {
   \ensuremath{n=#1} & \input{data/1-cond_A-#1.dat}
-                    \\ \cline{2-2}
+                    & \input{data/1-my_cond_A-#1.dat}
+                    \\ \cline{2-3}
 }
 \begin{table}[h]
   \centering
-  \begin{tabular}{r|c|}
+  \begin{tabular}{r|c|c|}
     \multicolumn{1}{r}{}
-     & \multicolumn{1}{c}{$\kappa(A)$} \\
-    \cline{2-2}
+    & \multicolumn{1}{c}{$\kappa(A)_{ML}$}
+     & \multicolumn{1}{c}{${\lambda_1}_{RQI}/{\lambda_n}_{RQI} $} \\
+    \cline{2-3}
     \fornTen{\condamacro}
   \end{tabular}
   \caption{Condition number of $A$}
@@ -271,6 +276,14 @@ and \ref{tab:inverit}.
 The speed of the rayleigh quotient is astonishing. The theoretical
 explanation is that it's convergence is cubic. See table
 \ref{tab:rqit}.
+
+\subsubsection{Ill conditioned ness}
+
+Since $\kappa(A) = \lambda_{max}/\lambda_{min}$ in general for a
+hermitian matrix I accompany matlabs estimate with the divsion of the
+calculated eigenvalues from my rayleigh quotient iteration. See table
+\ref{tab:conda}. Note that the values are different as matlab calculates
+the first norm condition number.
 
 % \newcommand{\genfig}[3] {{
 %     \begin{figure}
@@ -369,16 +382,104 @@ out in linear time for tridiagonal $A$! But one will suffer a squaring
 of the condition number making the new equation system much more ill
 conditioned.
 
+\subsubsection{Steepest Descent (SD) and Conjugate Gradients (CG)}
+
+The only interesting parts of these algorithms is the termination
+conditions. It can be proven that the SD method will converge in
+$O(\kappa(A))$ steps and CG only need the square root of that.
+I'll let SD run for exactly $\kappa(A)$ iterations and CG run for
+$\sqrt{\kappa(A)}$ iterations.
+
+\subsection{Results}
+
+It's very clear from the graphs that neither algorithm did converge to
+what it's supposed to. Not only are the graphs for various $n$ quite
+different, but across the algorithms the they've almost clustered.
+
+We notice a couple of details here. First, a large $\lambda$ decreases the
+condition number of $A$. Compare table \ref{tab:ct-id-1000} and
+\ref{tab:ct-id-1}. As an effect in those tables, the execution time is
+much better as the conditioning of $A$ is better (for every $n$). Of
+course this is because the way we choose the termination condition of
+the two algorithm. Yet we did have a very sound reasoning when choosing
+those conditions and I bet high quality software has similar termination
+conditions (albeit they do preconditioning and use other cool tricks).
+
+Furthermore, in the cases where the condition number is small, which is
+when either $\lambda$ is large or simply when $n$ is small, the
+performence of the SD isn't worse than that of CG. However, as the
+condition number grows, the execution time for SD becomes unbearable while
+the CG time is still faster than human perception.
+
+Just like in Part 1 We observe that the condition number increases at
+the same rate as the number of elements in the Array. In part 1 it
+were bad because of the arithmetical errors that made the termination
+conditions for rayleigh quotient difficult. Here, it means that
+\emph{the execution time of conjugate gradients increase linearly with
+$n$ for the same sort of matrices}
+
+
+\newcommand{\ctentries}[3] {
+  \ensuremath{n=#3} & \input{data/2-#1-#2-cond_estimate-#3.dat}
+                    & \input{data/2-#1-#2-time_sd-#3.dat}
+                    & \input{data/2-#1-#2-time_cg-#3.dat}
+                    \\ \cline{2-4}
+}
+
+\newcommand{\cttable}[2] {
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{r|c|c|c|}
+      \multicolumn{1}{r}{}
+      & \multicolumn{1}{c}{\ensuremath{\kappa(A)}}
+       & \multicolumn{1}{c}{Time for SD (seconds)}
+       & \multicolumn{1}{c}{Time for CG (seconds)}\\
+      \cline{2-4}
+      \fornTwo{\ctentries{#1}{#2}}
+    \end{tabular}
+    \caption{Table with \ensuremath{a(x)} being the #1 function and
+    \ensuremath{\lambda = #2}}
+    \label{tab:ct-#1-#2}
+  \end{table}
+}
+
+\cttable{const}{100}
+\cttable{const}{10}
+\cttable{const}{1}
+\cttable{const}{-1}
+\cttable{id}{1}
+\cttable{id}{10}
+\cttable{id}{100}
+\cttable{id}{1000}
+
+% These method both have a straight forward implementation when pseduo
+% code is provided (CG is in the book and SD 
+
+
+\newcommand{\genfig}[2]{
+    \centering
+    \begin{figure}
+      \includegraphics[width=\textwidth]{fig/2-#1-#2-u.png}
+      \caption{Figure with \ensuremath{a(x)} being the #1 function and
+    \ensuremath{\lambda = #2}}
+      \label{fig:#1-#2}
+    \end{figure}
+}
+
+
+\genfig{const}{100}
+% \genfig{const}{10}
+% \genfig{const}{1}
+% \genfig{const}{-1}
+% \genfig{id}{1}
+% \genfig{id}{10}
+% \genfig{id}{100}
+% \genfig{id}{1000}
 
 
 
 
 
-
-
-
-
-\subsection{Example pic!}
 
 % \begin{figure}
 %         \begin{subfigure}[b]{1.0\textwidth}
