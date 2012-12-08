@@ -1,5 +1,6 @@
 desc = ['2' '-' tc_name '-' a_name '-' num2str(lambda)];
 dest_fig = ['fig/' desc '-' 'u'];
+dest_fig = ['fig/' desc '-' 'u-only-cg'];
 if ~exist([dest_fig '.png'], 'file')
   store_fig = @(fn) saveas(gcf, dest_fig, 'png');
   hold on
@@ -10,6 +11,6 @@ if ~exist([dest_fig '.png'], 'file')
     solve_2
   end
   hold off
-  store_fig('u')
+  store_fig('u-only-cg')
   clf
 end

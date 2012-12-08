@@ -3,7 +3,6 @@ h = 1 / m;
 h2 = h*h;
 x = h:h:1-h; % x is the vector x. not the Ax=b thingie!
 
-if ~exists('time_cg')
   % temporrary assignments
   % lambda = 1.0;
   % a = @(x) diag(sparse(x)); % sparse diag
@@ -24,20 +23,21 @@ if ~exists('time_cg')
 
   cond_estimate = round(condest(S))
 
+if ~exists('time_cg') || true
   tic
   x_cg = conjugate_gradient(S, b, tc_cg(S));
   time_cg = toc;
   myplot = @(values) plot(0:h:1, [0; values; 0]);
   storeVar = @(var) store(num2str(evalin('base',var)), var);
-  storeVar('cond_estimate')
-  storeVar('time_cg')
+  % storeVar('cond_estimate')
+  % storeVar('time_cg')
   persist(x_cg, 'x_cg')
 
   p = myplot(x_cg);
   xlabel('x')
   ylabel('u(x)')
   set(p,'Color', [0 (log2(m)-5.64)/6.2 0]);
-  if(tc_sd(S) < 1000000)
+  if(tc_sd(S) < 1000000 && false)
 
     tic
     x_sd = steepest_descent(S, b, tc_sd(S));
@@ -51,7 +51,7 @@ if ~exists('time_cg')
 
     % Storing
     storeVar = @(var) store(num2str(evalin('base',var)), var);
-    storeVar('time_sd')
+    % storeVar('time_sd')
     persist(x_sd, 'x_sd')
   else
     store('\?','time_sd')

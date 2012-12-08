@@ -8,7 +8,7 @@ p_old = r_old;
 for i=1:its
   alpha = r_old'*r_old/(p_old'*A*p_old);
   x_old = x_old + alpha*p_old;
-  r = r_old - alpha*A*p_old;
+  r     = r_old - alpha*A*p_old;
   beta = (r'*r)/(r_old'*r_old);
   p_old = r + beta*r_old;
 

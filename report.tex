@@ -39,7 +39,7 @@
 I used power iteration to find the largest eigenvalue and inverse iteration to
 find the smallest. There is really no reason for not using the inverse
 iteration for both. One could have used one for the other but I wanted to try
-both.  I also used the rayleigh quotient iteration to see how much better it
+both.  I also used the Rayleigh quotient iteration to see how much better it
 performs. But first, lets recap how I discretize the problem.
 
 \subsubsection{Discretization (exactly as previous project)}
@@ -66,13 +66,13 @@ $u[i]$ in this scheme.
 \subsubsection{Power Iteration (PI)}
 
 I implemented the version in the course book.  $e_1$ was set to the
-initial guess of eigenwector since I didn't find any analysis that
+initial guess of eigenvector since I didn't find any analysis that
 motivated that taking any particular normal vector would help the
 convergence of the algorithm.
 
 To actually retrieve the largest eigenvalue from the vector that power
-iteration returns, you just take the rayleigh quotient of that vector.
-Note that the vector should hopefully be coverging to the eigenvector
+iteration returns, you just take the Rayleigh quotient of that vector.
+The vector should hopefully be converging to the eigenvector
 corresponding to the largest eigenvalue.
 
 \subsubsection{Inverse Iteration (II)}
@@ -82,7 +82,7 @@ when using Power Iteration, some understanding about $A$ is required, I
 must provide an eigenvalue close to the one I want. In order to find a
 value that always is close to the smallest eigenvalue I decided to
 experiment with $A$ for various $n$. My conclusion was that the smallest
-eigenvalue is approaching $0.0$ as $n$ increases. Therfor $\mu=0.0$ is
+eigenvalue is approaching $0.0$ as $n$ increases. Therefor $\mu=0.0$ is
 reasonable.
 
 \subsubsection{Rayleigh Quotient Iteration (RQI)}
@@ -98,7 +98,7 @@ By experimenting like I did when deciding $\mu$ for inverse iteration, I
 came up with this scheme for constructing an eigenvector like the one
 corresponding to the smallest eigenvalue. That eigenvector is in a
 pattern like this $normalize([4, 5, 6, 7, 7, 6, 5, 4])$ for $n=8$.  This
-pattern is easy to model programtically. The corresponding eigenvector
+pattern is easy to model programmatically. The corresponding eigenvector
 for largest eigenvalue is the same only with alternating signs.
 
 \subsubsection{Termination conditions}
@@ -120,7 +120,7 @@ the condition numbers
 \subsubsection{Sparsity}
 
 I will not demonstrate any evidence here, but I used matlabs sparse
-matrices everywhere to \emph{massively} improve the performence and
+matrices everywhere to \emph{massively} improve the performance and
 allowing larger $n$ to be tried out. So it indeed was not any fancy
 hardware that allowed for a large $n$, rather, it was a good algorithm.
 
@@ -233,7 +233,7 @@ quickly.
   \label{tab:conda}
 \end{table}
 
-\subsection{Results and explenations}
+\subsection{Results and explanations}
 
 % There are some observations that are interesting whilst others aren't. 
 
@@ -251,13 +251,13 @@ are far away from the correct (matlab's) answer. Furthermore, for most
 $n$ the values start converging extremely slow at about $0.003$. If you
 drastically increase the number of iterations the accuracy will improve.
 
-But for inverse iteration and rayleigh quotient iteration things are not
+But for inverse iteration and Rayleigh quotient iteration things are not
 as obvious. Is matlab right or is any of my implementations closer to
 the right answer? On one hand matlab is a high quality software but at
 the same time it was instructed to find all eigenvalues but I only aimed
 for a more specialized task which is obviously easier. No matter what
 both those two iterations are extremely close to matlabs answer and each
-other. It's therfor obvious that they work as they should.
+other. It's therefor obvious that they work as they should.
 
 \subsubsection{Comparing Inverse iteration with Power iteration}
 
@@ -273,33 +273,17 @@ and \ref{tab:inverit}.
 
 \subsubsection{Only two iterations!?}
 
-The speed of the rayleigh quotient is astonishing. The theoretical
+The speed of the Rayleigh quotient is astonishing. The theoretical
 explanation is that it's convergence is cubic. See table
 \ref{tab:rqit}.
 
-\subsubsection{Ill conditioned ness}
+\subsubsection{Ill conditioned $A$}
 
 Since $\kappa(A) = \lambda_{max}/\lambda_{min}$ in general for a
-hermitian matrix I accompany matlabs estimate with the divsion of the
-calculated eigenvalues from my rayleigh quotient iteration. See table
+hermitian matrix I accompany matlabs estimate with the division of the
+calculated eigenvalues from my Rayleigh quotient iteration. See table
 \ref{tab:conda}. Note that the values are different as matlab calculates
 the first norm condition number.
-
-% \newcommand{\genfig}[3] {{
-%     \begin{figure}
-%             \centering
-%             \begin{subfigure}[b]{1.0\textwidth}
-%                     \includegraphics[width=\textwidth]{fig/#1-#2-100}
-%                     \caption{$n = 100$}
-%             \end{subfigure}
-%             \begin{subfigure}[b]{1.0\textwidth}
-%                     \includegraphics[width=\textwidth]{fig/#1-#2-150}
-%                     \caption{$n = 150$}
-%             \end{subfigure}
-%             \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
-%     \end{figure}
-%   }}
-
 
 \section{Part II}
 
@@ -391,7 +375,7 @@ It can be proven that the SD method will converge in $O(\kappa(A))$ steps and
 CG only need the square root of that.  I'll let SD run for exactly $\kappa(A)$
 iterations and CG run for $\sqrt{\kappa(A)}$ iterations. Of course the ordo
 notation means that some constant is involved I've simply ignored that, but I
-saw no reason why $1$ should be worse than any other constant.
+saw no reason why $1$ should be better or worse than any other constant.
 
 In practice, calculating $\kappa(A)$ is computationally expensive, so instead I
 only get the 1-norm condition number, again using matlabs \texttt{condest}
@@ -413,8 +397,7 @@ condition number of $A$. Compare table \ref{tab:ct-id-1000} and
 much better as the conditioning of $A$ is better (for every $n$). Of
 course this is because the way we choose the termination condition of
 the two algorithm. Yet we did have a very sound reasoning when choosing
-those conditions and I bet high quality software has similar termination
-conditions (albeit they do preconditioning and use other cool tricks).
+those conditions.
 
 Furthermore, in the cases where the condition number is small, which is when
 either $\lambda$ is large or simply when $n$ is small, SD isn't slower than CG.
@@ -423,10 +406,13 @@ unbearable while the CG time is still faster than human perception.
 
 Just like in Part 1 We observe that the condition number increases at the same
 rate as the number of elements in the Array. In part 1 it were bad because of
-the arithmetical errors that made the termination conditions for rayleigh
+the arithmetical errors that made the termination conditions for Rayleigh
 quotient difficult. Here, it means that \emph{the execution time of conjugate
 gradients increase linearly with $n$ for the same sort of matrices} given that
 we use the current termination condition.
+
+A "?" in the tables below means that I didn't wait for that execution to finish
+so I couldn't time it.
 
 \subsubsection{The graphs}
 
@@ -434,25 +420,65 @@ The graphs are colored like this: CG are the green ones and the greener the
 larger $n$. The blue/red lines are the answers of the SD method. The redder the
 larger the $n$.
 
-While it's not possible to say for sure, I suspect the blueish lines are the
-correct ones, because they are grouped meaning that at least the algorithm
-agrees with itself.
+I suspect that the blueish lines are the correct ones, because they are grouped
+meaning that at least the algorithm agrees with itself.
 
 I believe that the CG method, while in theory only requiring the square root of
 the number of steps that SD requires, is suffering from its difficult promise.
 Note that the output $x$ is initialized too the zero vector in CG, and as
 iterations pass it tries to expand beyond that but don't have enough time. For
 the darker green lines, those with a smaller $n$ and that solves a simpler
-problem, it's sometimes visible (like in Figure \ref{fig:const-10}) that they
+problem, it's sometimes visible (like in Figure \ref{fig:kit-const-10}) that they
 stretch away from the line $y=0$ but don't have time to go all way. Yet this is
 the power of iterative methods, one can quit mid way and still get a reasonable
 result.
 
+So designed an additional experiment to see if the fault is that my termination
+condition is wrong.
+
+\subsection{Results with fixed number of iterations}
+
+I thought it would be interesting to see if the reason why steepest descent
+seemed to produce sensible output whilst conjugate gradients didn't was due to
+the fact that my termination condition gave a lot more iterations to SD. So I
+performed two experiments by running both the methods with $10000$ and $100000$
+number of iterations respectively. These are all of the figures \ref{fig:cit-const-100} to
+\ref{fig:bit-id-1000}, inclusive.
+
+I observe that exactly the same issue is present in all of these figures as
+well, namely SD seems to contain a reasonable value but CG seems to return
+something very close to the zero vector.  My conclusion is that number of
+iterations was not the reason for this oddity. Rather, either there is some
+property of the matrix $A$ or the right hand side $b$ that requires some
+preconditioning or that they simply are unsuitable for CG. Another likely
+reason is that my implementation might be wrong of course.
+
+\subsection{Zoom in on only CG graph}
+
+Ok, take another approach in studying figures. Lets study \emph{only} the CG
+curves to see how different or similar they really are, as nothing can be seen
+in the plots where also the SD curves are present.
+
+I can't see why the CG algorithm returns such unamplified answer. It's
+obviously about 3 to 4 magnitudes (factors of 10) too small than what's
+sensible and the steepest descent method finds. It's also clear from the
+figures in this category that the curve for $n=100$ and $n=200$ sometimes
+converge to the same value. CG considers that obviously too low value as the
+final almost optimal answer. See for example figure
+\ref{fig:bit-only-cg-const-100}.
+
+Also, I observe with rejoice that all of the curves coincide to the same
+value in figure \ref{fig:bit-only-cg-id-1000}. This all required a very large
+$\lambda$ to decrease the condition number and 100000 iterations in CG.
+
+\pagebreak
+
+\subsection{Appendix: All tables and figures of Part II}
 
 \newcommand{\ctentries}[3] {
-  \ensuremath{n=#3} & \input{data/2-#1-#2-cond_estimate-#3.dat}
-                    & \input{data/2-#1-#2-time_sd-#3.dat}
-                    & \input{data/2-#1-#2-time_cg-#3.dat}
+  \ensuremath{n=#3} & \input{data/2-kit-#1-#2-cond_estimate-#3.dat}
+                    & \input{data/2-kit-#1-#2-time_sd-#3.dat}
+                    & \input{data/2-kit-#1-#2-time_cg-#3.dat}
                     \\ \cline{2-4}
 }
 
@@ -473,121 +499,73 @@ result.
   \end{table}
 }
 
-\cttable{const}{100}
-\cttable{const}{10}
-\cttable{const}{1}
-\cttable{const}{-1}
-\cttable{id}{1}
-\cttable{id}{10}
-\cttable{id}{100}
-\cttable{id}{1000}
+\newcommand{\applyall}[1]{
+  #1{const}{100}
+  #1{const}{10}
+  #1{const}{1}
+  #1{const}{-1}
+  #1{id}{1}
+  #1{id}{10}
+  #1{id}{100}
+  #1{id}{1000}
+}
+
+\applyall{\cttable}
 
 % These method both have a straight forward implementation when pseduo
 % code is provided (CG is in the book and SD 
 
 
-\newcommand{\genfig}[2]{
+\newcommand{\genfigkappa}[2]{
     \centering
-    \begin{figure}
-      \includegraphics[width=\textwidth]{fig/2-#1-#2-u.png}
+    \begin{figure}[ht]
+      \includegraphics[scale=0.5]{fig/2-kit-#1-#2-u.png}
       \caption{Figure with \ensuremath{a(x)} being the #1 function and
-    \ensuremath{\lambda = #2}}
-      \label{fig:#1-#2}
+      \ensuremath{\lambda = #2} where the convergence is based on \ensuremath{\kappa(A)}}
+      \label{fig:kit-#1-#2}
     \end{figure}
 }
 
 
-\genfig{const}{100}
-\genfig{const}{10}
-\genfig{const}{1}
-\genfig{const}{-1}
-\genfig{id}{1}
-\genfig{id}{10}
-\genfig{id}{100}
-\genfig{id}{1000}
+\applyall{\genfigkappa}
+\clearpage
 
+\newcommand{\genfigsmall}[2]{
+    \centering
+    \begin{figure}[ht]
+      \includegraphics[scale=0.5]{fig/2-cit-#1-#2-u.png}
+      \caption{Figure with \ensuremath{a(x)} being the #1 function and
+      \ensuremath{\lambda = #2} doing 10000 iterations}
+      \label{fig:cit-#1-#2}
+    \end{figure}
+}
 
+\newcommand{\genfiglarge}[2]{
+    \centering
+    \begin{figure}[ht]
+      \includegraphics[scale=0.5]{fig/2-bit-#1-#2-u.png}
+      \caption{Figure with \ensuremath{a(x)} being the #1 function and
+      \ensuremath{\lambda = #2} doing 100000 iterations}
+      \label{fig:bit-#1-#2}
+    \end{figure}
+}
 
+\applyall{\genfigsmall}
+\clearpage
 
+\applyall{\genfiglarge}
 
+\newcommand{\genfiglargeonly}[2]{
+    \centering
+    \begin{figure}[ht]
+      \includegraphics[scale=0.5]{fig/2-bit-#1-#2-u-only-cg.png}
+      \caption{Figure with \ensuremath{a(x)} being the #1 function and
+      \ensuremath{\lambda = #2} doing 100000 iterations. This figure contains
+    only the CG results}
+      \label{fig:bit-only-cg-#1-#2}
+    \end{figure}
+}
 
-% \begin{figure}
-%         \begin{subfigure}[b]{1.0\textwidth}
-%           \includegraphics[width=\textwidth]{fig/all.png}
-%           \caption{The whole plot}\label{fig:wholeplot}
-%         \end{subfigure}
-
-%         \begin{subfigure}[b]{1.0\textwidth}
-%           \includegraphics[width=\textwidth]{fig/azoom.png}
-%           \caption{One zooming}\label{fig:zooming}
-%         \end{subfigure}
-%         \caption{Plots of $u(x)$. The red line is the actual function.
-%         The others are estimations. The greener the line the higher
-%       $n$.}\label{fig:plots}
-% \end{figure}
-
-
-% \section{Table example}
-
-% \begin{table}[h]
-%   \begin{tabular}{r|c|c|c|}
-%     \multicolumn{1}{r}{}
-%      & \multicolumn{1}{c}{$Q_{classic}$ }
-%      & \multicolumn{1}{c}{$Q_{stable}$}
-%      & \multicolumn{1}{c}{$Q_{householder}$} \\
-%     \cline{2-4}
-%     $n=100$ & \input{data/norm-q-classi-100.dat}
-%             & \input{data/norm-q-stable-100.dat}
-%             & \input{data/norm-q-househ-100.dat}
-%             \\ \cline{2-4}
-%     $n=150$ & \input{data/norm-q-classi-150.dat}
-%             & \input{data/norm-q-stable-150.dat}
-%             & \input{data/norm-q-househ-150.dat}
-%             \\ \cline{2-4}
-%   \end{tabular}
-%   \caption{Norms for the different unitary $Q$ matrices}
-%   \label{tab:norms}
-% \end{table}
-
-% \begin{table}[h]
-%   \begin{tabular}{r|c|c|c|}
-%     \multicolumn{1}{r}{}
-%      & \multicolumn{1}{c}{$Q_{classic}$ }
-%      & \multicolumn{1}{c}{$Q_{stable}$}
-%      & \multicolumn{1}{c}{$Q_{householder}$} \\
-%     \cline{2-4}
-%     $n=100$ & \input{data/std-q-classi-100.dat}
-%             & \input{data/std-q-stable-100.dat}
-%             & \input{data/std-q-househ-100.dat}
-%             \\ \cline{2-4}
-%     $n=150$ & \input{data/std-q-classi-150.dat}
-%             & \input{data/std-q-stable-150.dat}
-%             & \input{data/std-q-househ-150.dat}
-%             \\ \cline{2-4}
-%   \end{tabular}
-%   \caption{The standard deviation for the values of $A-QR$}
-%   \label{tab:stds}
-% \end{table}
-
-% \newcommand{\genfig}[3] {{
-%     \begin{figure}
-%             \centering
-%             \begin{subfigure}[b]{1.0\textwidth}
-%                     \includegraphics[width=\textwidth]{fig/#1-#2-100}
-%                     \caption{$n = 100$}
-%             \end{subfigure}
-%             \begin{subfigure}[b]{1.0\textwidth}
-%                     \includegraphics[width=\textwidth]{fig/#1-#2-150}
-%                     \caption{$n = 150$}
-%             \end{subfigure}
-%             \caption{Medians of the columns of $\Delta #2$ #3}\label{fig:#1-#2}
-%     \end{figure}
-%   }}
-
-% \genfig{log-median-col}{Q}{logarithmized}
-% \genfig{median-row}{Q}{}
-% \genfig{log-median-col}{R}{logarithmized}
-% \genfig{log-median-row}{R}{logarithmized}
-
+\applyall{\genfiglargeonly}
 
 \end{document}
